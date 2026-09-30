@@ -1,0 +1,39 @@
+{
+  "experiment": "E8_device",
+  "timestamp": 1790781376.8456776,
+  "random_seed": 42,
+  "hardware": {
+    "os": "Windows",
+    "release": "11",
+    "architecture": "AMD64",
+    "processor": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+    "python_version": "3.13.5"
+  },
+  "query": {
+    "embed_p50_ms": 0.37,
+    "embed_p95_ms": 1.34,
+    "adapter_p50_ms": 0.13,
+    "adapter_p95_ms": 0.63,
+    "search_p50_ms": 0.87,
+    "search_p95_ms": 2.08,
+    "total_p50_ms": 1.37
+  },
+  "migration": {
+    "points": [
+      500,
+      1000,
+      2000
+    ],
+    "time_sec": [
+      0.453,
+      0.54,
+      0.664
+    ],
+    "reembed_time_sec": [
+      33.68,
+      67.36,
+      134.72
+    ],
+    "reembed_is_extrapolated": true
+  }
+}

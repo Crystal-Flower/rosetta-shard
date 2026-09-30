@@ -1,0 +1,45 @@
+{
+  "experiment": "E2_adapter_ablation",
+  "timestamp": 1790781361.7685003,
+  "random_seed": 42,
+  "n_anchors": 100,
+  "n_docs": 500,
+  "n_queries": 50,
+  "methods": {
+    "random_baseline": {
+      "overlap_at_10": 0.018,
+      "recall_at_10": 0.0,
+      "ndcg_at_10": 0.0
+    },
+    "pad_truncate": {
+      "overlap_at_10": 0.024,
+      "recall_at_10": 0.02,
+      "ndcg_at_10": 0.02
+    },
+    "cca_baseline": {
+      "overlap_at_10": 0.036,
+      "recall_at_10": 0.02,
+      "ndcg_at_10": 0.0086
+    },
+    "procrustes": {
+      "overlap_at_10": 0.42,
+      "recall_at_10": 0.02,
+      "ndcg_at_10": 0.0126
+    },
+    "ridge_adapter": {
+      "overlap_at_10": 0.432,
+      "recall_at_10": 0.02,
+      "ndcg_at_10": 0.0126
+    },
+    "contrastive": {
+      "overlap_at_10": 0.412,
+      "recall_at_10": 0.02,
+      "ndcg_at_10": 0.0086
+    },
+    "native_large_ceiling": {
+      "overlap_at_10": 1.0,
+      "recall_at_10": 0.0,
+      "ndcg_at_10": 0.0
+    }
+  }
+}

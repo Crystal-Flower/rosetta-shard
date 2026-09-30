@@ -1,0 +1,37 @@
+{
+  "experiment": "E9_feature_ablation",
+  "timestamp": 1790781377.7895334,
+  "random_seed": 42,
+  "n_train": 30,
+  "n_test": 50,
+  "ablations": {
+    "full_model": {
+      "loss_mae": 0.1397,
+      "n_features": 6
+    },
+    "drop_anchor_sims": {
+      "loss_mae": 0.1352,
+      "n_features": 4
+    },
+    "drop_margins": {
+      "loss_mae": 0.1617,
+      "n_features": 4
+    },
+    "drop_local_fit_err": {
+      "loss_mae": 0.1401,
+      "n_features": 5
+    },
+    "drop_self_consistency": {
+      "loss_mae": 0.1397,
+      "n_features": 5
+    },
+    "only_anchor_sims": {
+      "loss_mae": 0.1624,
+      "n_features": 2
+    },
+    "constant_baseline": {
+      "loss_mae": 0.1688,
+      "n_features": 0
+    }
+  }
+}

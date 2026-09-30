@@ -1,0 +1,66 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rosetta-shard"
+version = "0.1.0"
+description = "AI-Powered Edge Memory & Intelligence Platform with Calibrated Recall Certificates"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "Rosetta Shard Team" }
+]
+dependencies = [
+    "qdrant-edge-py>=0.8.0",
+    "qdrant-client>=1.14.0",
+    "fastembed>=0.8.0",
+    "numpy>=1.26.0",
+    "scipy>=1.12.0",
+    "scikit-learn>=1.4.0",
+    "pandas>=2.2.0",
+    "matplotlib>=3.8.0",
+    "fastapi>=0.110.0",
+    "uvicorn>=0.28.0",
+    "httpx>=0.27.0",
+    "pydantic>=2.6.0",
+    "typer>=0.12.0",
+    "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.3.0",
+]
+torch = [
+    "torch>=2.2.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+ignore = [
+    "E501",
+    "BLE001",
+    "DTZ003",
+    "B006",
+    "S110",
+    "TRY201",
+    "C414",
+    "UP035",
+    "RUF015",
+    "F841",
+    "RUF059",
+    "SIM118",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+pythonpath = ["."]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]

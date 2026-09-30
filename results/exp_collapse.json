@@ -1,0 +1,11 @@
+{
+  "experiment": "E1_collapse",
+  "timestamp": 1790781359.2302175,
+  "random_seed": 42,
+  "n_docs": 500,
+  "n_queries": 50,
+  "s1_silent_overlap": 0.278,
+  "s1_guard_blocked_rate": 1.0,
+  "s2_baseline_overlap": 0.024,
+  "s2_adapted_overlap": 0.404
+}

@@ -1,0 +1,9 @@
+{
+  "experiment": "E6_shift",
+  "timestamp": 1790781368.853409,
+  "random_seed": 42,
+  "nominal_guarantee": 0.9,
+  "in_domain_coverage": 0.9,
+  "shifted_coverage": 1.0,
+  "ood_escalation_rate": 1.0
+}
