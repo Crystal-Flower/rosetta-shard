@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rosetta Shard — Edge Memory That Survives Model Upgrades</title>
+<style>
+:root{--bg:#070a0f;--panel:rgba(14,19,28,.82);--panel2:#0d131d;--line:rgba(148,163,184,.14);--text:#eef5ff;--muted:#8290a5;--cyan:#45d9ff;--violet:#8b7cff;--green:#36e39a;--yellow:#f4c95d;--red:#ff6574;--shadow:0 24px 80px rgba(0,0,0,.38)}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{min-height:100vh;background:radial-gradient(circle at 15% 5%,rgba(69,217,255,.11),transparent 28%),radial-gradient(circle at 90% 12%,rgba(139,124,255,.13),transparent 30%),linear-gradient(180deg,#070a0f 0%,#080c12 45%,#06090d 100%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5;padding:26px;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.32;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(to bottom,black,transparent 75%)}
+button,input{font:inherit}.shell{max-width:1500px;margin:auto;position:relative;z-index:1}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:4px 0 24px;border-bottom:1px solid var(--line);gap:18px}.brand{display:flex;align-items:center;gap:13px}.logo{width:43px;height:43px;border-radius:13px;background:linear-gradient(135deg,var(--cyan),var(--violet));display:grid;place-items:center;color:#05070a;font-weight:950;font-size:20px;box-shadow:0 0 34px rgba(69,217,255,.2)}.brand h1{font-size:18px;letter-spacing:-.4px}.brand p{font-size:11px;color:var(--muted);margin-top:1px}.live{display:inline-flex;align-items:center;gap:7px;margin-left:10px;padding:4px 8px;border:1px solid rgba(54,227,154,.28);border-radius:999px;color:var(--green);background:rgba(54,227,154,.07);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px}.dot{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor}.controls{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:rgba(17,24,34,.8);color:#dce7f6;border-radius:9px;padding:9px 13px;font-size:11px;font-weight:750;cursor:pointer;transition:.18s}.btn:hover{border-color:rgba(69,217,255,.5);transform:translateY(-1px);background:#131c29}.btn.primary{border-color:rgba(69,217,255,.35);background:linear-gradient(135deg,rgba(69,217,255,.16),rgba(139,124,255,.14));color:#fff}.btn.danger{border-color:rgba(255,101,116,.4);color:#ff9aa5;background:rgba(255,101,116,.08)}.hero{padding:42px 0 30px;display:grid;grid-template-columns:1.35fr .65fr;gap:30px;align-items:end}.eyebrow{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--cyan);font-weight:850;margin-bottom:12px}.hero h2{font-size:clamp(35px,5vw,67px);line-height:.98;letter-spacing:-3px;max-width:850px}.hero h2 span{background:linear-gradient(90deg,#fff 15%,#9ceeff 52%,#9b91ff);-webkit-background-clip:text;color:transparent}.hero .sub{color:#99a6b8;font-size:14px;max-width:740px;margin-top:17px}.pitch-card{background:linear-gradient(145deg,rgba(17,25,37,.9),rgba(10,14,22,.78));border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow)}.pitch-card .k{font-size:10px;text-transform:uppercase;letter-spacing:1.3px;color:var(--muted)}.pitch-card .v{font-size:27px;font-weight:900;margin-top:5px}.pitch-card .small{font-size:11px;color:var(--muted);margin-top:3px}.signal{height:1px;background:linear-gradient(90deg,var(--cyan),transparent);margin:17px 0}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:4px 0 18px}.metric{padding:14px 15px;background:rgba(14,19,28,.7);border:1px solid var(--line);border-radius:12px}.metric .label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}.metric .num{font-size:20px;font-weight:900;margin-top:4px}.metric .hint{font-size:10px;color:#69778c;margin-top:2px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{background:linear-gradient(145deg,rgba(15,21,31,.88),rgba(9,13,19,.88));border:1px solid var(--line);border-radius:17px;padding:19px;box-shadow:0 15px 55px rgba(0,0,0,.18)}.panel.wide{grid-column:1/-1}.panel-header{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:17px}.panel-title{font-size:13px;font-weight:850;letter-spacing:-.1px}.panel-desc{font-size:10px;color:var(--muted);margin-top:3px}.status-badge{display:inline-flex;align-items:center;white-space:nowrap;font-size:9px;padding:5px 8px;border-radius:999px;background:#151d29;color:#9eabc0;border:1px solid var(--line);font-weight:800}.status-badge.green{color:var(--green);background:rgba(54,227,154,.07);border-color:rgba(54,227,154,.25)}.status-badge.red{color:var(--red);background:rgba(255,101,116,.07);border-color:rgba(255,101,116,.25)}.status-badge.yellow{color:var(--yellow);background:rgba(244,201,93,.07);border-color:rgba(244,201,93,.25)}.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}.stat-card{background:rgba(6,10,15,.65);border:1px solid var(--line);border-radius:11px;padding:11px 12px}.stat-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px}.stat-val{font-size:13px;font-weight:800;color:#f1f6ff;margin-top:4px;word-break:break-all}.query-label{font-size:10px;color:var(--muted);margin:18px 0 7px;text-transform:uppercase;letter-spacing:.8px}.query-box{display:flex;gap:7px}input[type=text]{width:100%;background:#070b11;border:1px solid var(--line);border-radius:9px;padding:11px 12px;color:#fff;font-size:12px;outline:none}input[type=text]:focus{border-color:rgba(69,217,255,.55);box-shadow:0 0 0 3px rgba(69,217,255,.06)}.presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.preset-chip{font-size:9px;color:#9ba8bb;border:1px solid var(--line);background:#0b1018;padding:5px 8px;border-radius:7px;cursor:pointer}.preset-chip:hover{color:var(--cyan);border-color:rgba(69,217,255,.35)}.certificate-panel{margin-top:15px;background:linear-gradient(135deg,rgba(69,217,255,.08),rgba(139,124,255,.06));border:1px solid rgba(69,217,255,.2);border-radius:12px;padding:13px}.cert-title{display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:850;color:#dceaff;text-transform:uppercase;letter-spacing:.5px}.cert-metric{display:flex;justify-content:space-between;gap:12px;margin-top:9px;font-size:10px;color:#8f9caf}.cert-metric strong,.cert-metric span:last-child{color:#eef7ff}.results-container{display:flex;flex-direction:column;gap:7px;margin-top:13px;max-height:330px;overflow:auto}.hit-card{background:#090e15;border:1px solid var(--line);border-radius:10px;padding:11px}.hit-title{font-size:10px;font-weight:850;color:#b9efff;display:flex;justify-content:space-between;gap:10px}.hit-score{color:var(--green);font-family:ui-monospace,monospace}.hit-text{font-size:10px;color:#7e8ca0;margin-top:5px}.alert{padding:10px 12px;border-radius:9px;font-size:10px;margin-top:10px;display:none}.alert.danger{background:rgba(255,101,116,.08);border:1px solid rgba(255,101,116,.35);color:#ff9aa5}.alert.success{background:rgba(54,227,154,.07);border:1px solid rgba(54,227,154,.3);color:#77efb8}.action-stack{display:flex;flex-direction:column;gap:8px}.action{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px;background:#090e15;border:1px solid var(--line);border-radius:10px}.action .left{display:flex;align-items:center;gap:10px}.step{width:25px;height:25px;border-radius:7px;display:grid;place-items:center;background:#131c29;color:var(--cyan);font-size:10px;font-weight:900}.action-title{font-size:11px;font-weight:800}.action-sub{font-size:9px;color:var(--muted);margin-top:2px}.protocol{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.guard{padding:11px;border:1px solid var(--line);background:#090e15;border-radius:10px}.guard b{font-size:10px}.guard span{display:block;font-size:9px;color:var(--muted);margin-top:3px}.migration{margin-top:12px}.arch{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:9px;align-items:stretch}.node{padding:17px;border-radius:12px;background:#090e15;border:1px solid var(--line);position:relative}.node.edge{border-color:rgba(69,217,255,.24)}.node.cloud{border-color:rgba(139,124,255,.24)}.node h4{font-size:11px}.node p{font-size:9px;color:var(--muted);margin-top:4px}.node .tag{margin-top:12px;display:inline-block;font-size:8px;padding:4px 6px;border-radius:5px;background:#121a25;color:#a8b6c9}.flow{display:flex;align-items:center;justify-content:center;color:#536278;font-size:16px}.footer{padding:22px 0 8px;display:flex;justify-content:space-between;color:#536176;font-size:9px}.footer strong{color:#8593a8}@media(max-width:900px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.arch{grid-template-columns:1fr}.flow{transform:rotate(90deg);height:10px}}@media(max-width:560px){body{padding:15px}.topbar{align-items:flex-start;flex-direction:column}.hero h2{font-size:42px}.metrics{grid-template-columns:1fr}.stat-row{grid-template-columns:1fr}.controls{width:100%}.btn{flex:1}.protocol{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="topbar">
+  <div class="brand"><div class="logo">R</div><div><h1>Rosetta Shard <span class="live"><i class="dot"></i> Live Demo</span></h1><p>AI-Powered Edge Memory & Intelligence Platform</p></div></div>
+  <div class="controls"><button class="btn" onclick="resetDemo()">↻ Reset</button><button class="btn" id="btn-airplane" onclick="toggleAirplane()">Airplane Mode: OFF</button><button class="btn" id="btn-guard" onclick="toggleSpaceGuard()">Space Guard: ACTIVE</button></div>
+</header>
+
+<section class="hero">
+ <div><div class="eyebrow">Hackathon Demonstration Console</div><h2>Memory that <span>survives model upgrades.</span></h2><p class="sub">Rosetta Shard keeps AI memory local, verifies retrieval in its resident vector space, and migrates knowledge safely when the cloud model changes — without sending raw text off-device.</p></div>
+ <div class="pitch-card"><div class="k">Core promise</div><div class="v">Local-first. Upgrade-safe.</div><div class="small">Edge memory stays useful even when models, dimensions and embedding spaces change.</div><div class="signal"></div><div class="k">Judge demo path</div><div class="small" style="color:#dce6f5">Query → Certificate → Upgrade → Adapter → Atomic Migration</div></div>
+</section>
+
+<div class="metrics">
+ <div class="metric"><div class="label">Edge Memory</div><div class="num" id="metric-points">—</div><div class="hint">vectors resident locally</div></div>
+ <div class="metric"><div class="label">Privacy</div><div class="num">0 B raw text</div><div class="hint">leaves the edge</div></div>
+ <div class="metric"><div class="label">Safety</div><div class="num">90%+</div><div class="hint">conformal recall target</div></div>
+ <div class="metric"><div class="label">Migration</div><div class="num">Atomic</div><div class="hint">crash-safe shard swap</div></div>
+</div>
+
+<div class="grid">
+<section class="panel">
+ <div class="panel-header"><div><div class="panel-title">01 · Edge Memory</div><div class="panel-desc">Local Qdrant shard + resident coordinate space</div></div><span id="edge-space-badge" class="status-badge">bge-small · 384-d</span></div>
+ <div class="stat-row"><div class="stat-card"><div class="stat-label">Resident Space ID</div><div class="stat-val" id="edge-space">Loading...</div></div><div class="stat-card"><div class="stat-label">Stored Vectors</div><div class="stat-val" id="edge-points">—</div></div></div>
+ <div class="query-label">Live retrieval test</div>
+ <div class="query-box"><input type="text" id="query-input" placeholder="Ask the on-device knowledge base..." value="Lithium battery thermal degradation rate"><button class="btn primary" onclick="submitQuery()">Run Query</button></div>
+ <div class="presets"><span class="preset-chip" onclick="setQuery('Lithium battery thermal degradation rate')">Battery Thermal · In-domain</span><span class="preset-chip" onclick="setQuery('Simultaneous localization SLAM on mobile robots')">Robotics SLAM · In-domain</span><span class="preset-chip" onclick="setQuery('Cryptocurrency capital gains and tax policy')">Crypto Taxes · OOD shift</span></div>
+ <div id="cert-box" class="certificate-panel" style="display:none"><div class="cert-title"><span>✓ Conformal Recall Certificate · α = 0.10</span><span id="routing-badge" class="status-badge green">SERVE_LOCAL</span></div><div class="cert-metric"><span>Certified Minimum Overlap (P ≥ 90%)</span><strong id="cert-overlap">-</strong></div><div class="cert-metric"><span>Anchor Cosine Similarity · OOD check</span><span id="cert-ood">-</span></div><div class="cert-metric"><span>On-device query latency</span><span id="cert-latency">-</span></div></div>
+ <div id="alert-box" class="alert"></div><div class="results-container" id="results-list"></div>
+</section>
+
+<section class="panel">
+ <div class="panel-header"><div><div class="panel-title">02 · Cloud Intelligence</div><div class="panel-desc">Model lifecycle without breaking edge memory</div></div><span id="cloud-status-badge" class="status-badge green">Cloud Sync Ready</span></div>
+ <div class="stat-row"><div class="stat-card"><div class="stat-label">Active Cloud Space</div><div class="stat-val" id="cloud-space">Loading...</div></div><div class="stat-card"><div class="stat-label">Network Footprint</div><div class="stat-val" id="cloud-bytes">0 KB Sent / 0 KB Recv</div></div></div>
+ <div class="query-label">Three-step upgrade choreography</div>
+ <div class="action-stack">
+  <div class="action"><div class="left"><div class="step">1</div><div><div class="action-title">Upgrade cloud model</div><div class="action-sub">bge-large-en-v1.5 · 1024-d</div></div></div><button class="btn" id="btn-upgrade" onclick="upgradeCloud()">Upgrade</button></div>
+  <div class="action"><div class="left"><div class="step">2</div><div><div class="action-title">Push compact adapter</div><div class="action-sub">128 KB · no raw text payload</div></div></div><button class="btn" id="btn-adapter" onclick="pushAdapter()">Push</button></div>
+  <div class="action"><div class="left"><div class="step">3</div><div><div class="action-title">Atomic shard migration</div><div class="action-sub">Re-encode local vectors safely</div></div></div><button class="btn primary" id="btn-migrate" onclick="runMigration()">Migrate</button></div>
+ </div>
+ <div id="migration-box" class="migration stat-card" style="display:none;background:rgba(54,227,154,.05);border-color:rgba(54,227,154,.28)"><div class="stat-label" style="color:var(--green)">Migration benchmark</div><div style="font-size:11px;margin-top:5px" id="migration-detail">-</div></div>
+ <div class="query-label">Protocol safety assertions</div>
+ <div class="protocol"><div class="guard"><b>Space Guard</b><span>Blocks silent retrieval collapse across coordinate spaces.</span></div><div class="guard"><b>Recall Certificate</b><span>Calibrated retrieval-fidelity guarantee.</span></div><div class="guard"><b>Crash-Safe</b><span>Old shard remains queryable during interruption.</span></div><div class="guard"><b>Zero Raw Text</b><span>Only weights + centroids cross the boundary.</span></div></div>
+</section>
+
+<section class="panel wide">
+ <div class="panel-header"><div><div class="panel-title">03 · System Architecture</div><div class="panel-desc">The pitch in one visual: memory stays local while intelligence evolves remotely.</div></div><span class="status-badge green">PROTOCOL ACTIVE</span></div>
+ <div class="arch"><div class="node edge"><h4>EDGE DEVICE</h4><p>Local Qdrant shard · private knowledge · resident embedding space</p><span class="tag">QUERY LOCALLY</span></div><div class="flow">⟷</div><div class="node cloud"><h4>CLOUD MODEL</h4><p>Model upgrades · compact adapter · new embedding coordinate space</p><span class="tag">UPGRADE SAFELY</span></div></div>
+</section>
+</div>
+<footer class="footer"><span><strong>Rosetta Shard</strong> · Edge memory that survives model upgrades</span><span>Hackathon Demo Console · Live backend connected</span></footer>
+</div>
+
+  <script>
+    async function fetchStatus() {
+      const res = await fetch('/api/status');
+      const data = await res.json();
+      
+      document.getElementById('edge-space').innerText = data.device.space_id;
+      document.getElementById('edge-points').innerText = data.device.points + ' points (' + data.device.dim + '-d)';
+      document.getElementById('cloud-space').innerText = data.cloud.space_id;
+      document.getElementById('cloud-bytes').innerText = 
+        Math.round(data.cloud.bytes_sent / 1024) + ' KB sent / ' + 
+        Math.round(data.cloud.bytes_received / 1024) + ' KB recv';
+
+      document.getElementById('btn-airplane').innerText = 'Airplane Mode: ' + (data.device.airplane_mode ? 'ON' : 'OFF');
+      document.getElementById('btn-guard').innerText = 'Space Guard: ' + (data.device.space_guard_enabled ? 'ACTIVE' : 'BYPASSED');
+      document.getElementById('btn-guard').className = data.device.space_guard_enabled ? 'btn secondary' : 'btn danger';
+
+      if (data.device.migrated) {
+        document.getElementById('edge-space-badge').innerText = 'bge-large (1024-d Migrated)';
+        document.getElementById('edge-space-badge').className = 'status-badge green';
+      }
+    }
+
+    async function toggleAirplane() {
+      await fetch('/api/airplane', { method: 'POST' });
+      fetchStatus();
+    }
+
+    async function toggleSpaceGuard() {
+      await fetch('/api/space_guard', { method: 'POST' });
+      fetchStatus();
+    }
+
+    async function upgradeCloud() {
+      await fetch('/api/upgrade_cloud', { method: 'POST' });
+      showAlert('Cloud upgraded model to bge-large-en-v1.5 (1024-d). Vector coordinate spaces are now incompatible!', 'danger');
+      fetchStatus();
+    }
+
+    async function pushAdapter() {
+      const res = await fetch('/api/push_adapter', { method: 'POST' });
+      const data = await res.json();
+      showAlert('Adapter Bundle received (' + data.bundle_size_kb + ' KB). Ready for local atomic migration.', 'success');
+      fetchStatus();
+    }
+
+    async function runMigration() {
+      const res = await fetch('/api/migrate', { method: 'POST' });
+      if (!res.ok) {
+        const err = await res.json();
+        showAlert(err.detail || 'Migration failed', 'danger');
+        return;
+      }
+      const data = await res.json();
+      document.getElementById('migration-box').style.display = 'block';
+      document.getElementById('migration-detail').innerText = 
+        'Migrated ' + data.points_migrated + ' points in ' + data.elapsed_sec + 's (' + data.speedup_factor + 'x faster than on-device re-embedding estimate of ' + data.reembed_estimate_sec + 's)';
+      showAlert('Shard migrated atomically to 1024-d space without raw text!', 'success');
+      fetchStatus();
+    }
+
+    async function submitQuery() {
+      const q = document.getElementById('query-input').value;
+      const res = await fetch('/api/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: q })
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        if (data.blocked) {
+          showAlert('Space Guard Blocked Query: ' + data.message, 'danger');
+          document.getElementById('results-list').innerHTML = '';
+          document.getElementById('cert-box').style.display = 'none';
+        } else {
+          showAlert('Query error: ' + (data.detail || data.error), 'danger');
+        }
+        return;
+      }
+
+      hideAlert();
+      document.getElementById('cert-box').style.display = 'block';
+      document.getElementById('routing-badge').innerText = data.decision;
+      document.getElementById('routing-badge').className = 
+        data.decision === 'SERVE_LOCAL' ? 'status-badge green' : (data.decision === 'ESCALATE' ? 'status-badge yellow' : 'status-badge red');
+      
+      document.getElementById('cert-overlap').innerText = (data.certified_overlap * 100).toFixed(1) + '%';
+      document.getElementById('cert-ood').innerText = data.sim_anchor_max.toFixed(3);
+      document.getElementById('cert-latency').innerText = data.latency_ms + ' ms';
+
+      const resultsDiv = document.getElementById('results-list');
+      resultsDiv.innerHTML = '';
+      data.hits.forEach((h, idx) => {
+        const card = document.createElement('div');
+        card.className = 'hit-card';
+        card.innerHTML = `
+          <div class="hit-title">
+            <span>#${idx+1} ${h.title}</span>
+            <span class="hit-score">Score: ${h.score}</span>
+          </div>
+          <div class="hit-text">${h.text}</div>
+        `;
+        resultsDiv.appendChild(card);
+      });
+
+      fetchStatus();
+    }
+
+    function setQuery(text) {
+      document.getElementById('query-input').value = text;
+      submitQuery();
+    }
+
+    function showAlert(msg, type) {
+      const a = document.getElementById('alert-box');
+      a.className = 'alert ' + type;
+      a.innerText = msg;
+      a.style.display = 'block';
+    }
+
+    function hideAlert() {
+      document.getElementById('alert-box').style.display = 'none';
+    }
+
+    async function resetDemo() {
+      await fetch('/api/reset', { method: 'POST' });
+      document.getElementById('results-list').innerHTML = '';
+      document.getElementById('cert-box').style.display = 'none';
+      document.getElementById('migration-box').style.display = 'none';
+      hideAlert();
+      fetchStatus();
+    }
+
+    fetchStatus();
+  </script>
+
+</body>
+</html>

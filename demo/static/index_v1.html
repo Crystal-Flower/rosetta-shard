@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rosetta Shard — AI Edge Memory & Intelligence Platform</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --panel: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --success: #2ea043;
+      --warning: #d29922;
+      --danger: #f85149;
+      --badge-bg: #21262d;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace; }
+    body { background: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; }
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 20px; }
+    h1 { font-size: 1.4rem; color: #fff; display: flex; align-items: center; gap: 10px; }
+    .status-badge { font-size: 0.75rem; padding: 3px 8px; border-radius: 12px; background: var(--border); color: #fff; }
+    .status-badge.green { background: rgba(46, 160, 67, 0.2); color: var(--success); border: 1px solid var(--success); }
+    .status-badge.red { background: rgba(248, 81, 73, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+    .status-badge.yellow { background: rgba(210, 153, 34, 0.2); color: var(--warning); border: 1px solid var(--warning); }
+    
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+    .panel-title { font-size: 1.1rem; font-weight: bold; color: #fff; }
+    
+    .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.85rem; }
+    .stat-card { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; }
+    .stat-label { color: var(--text-muted); font-size: 0.75rem; }
+    .stat-val { font-size: 0.95rem; font-weight: bold; color: #fff; word-break: break-all; }
+
+    .btn { background: #238636; color: #fff; border: 1px solid rgba(240,246,252,0.1); border-radius: 6px; padding: 8px 14px; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
+    .btn:hover { background: #2ea043; }
+    .btn.secondary { background: #21262d; border-color: var(--border); color: var(--text); }
+    .btn.secondary:hover { background: #30363d; }
+    .btn.danger { background: #da3633; }
+    .btn.danger:hover { background: #f85149; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .query-box { display: flex; gap: 8px; }
+    input[type="text"] { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; color: #fff; font-size: 0.9rem; }
+    input[type="text"]:focus { outline: none; border-color: var(--accent); }
+
+    .presets { display: flex; gap: 6px; flex-wrap: wrap; }
+    .preset-chip { font-size: 0.75rem; background: var(--bg); border: 1px solid var(--border); padding: 4px 8px; border-radius: 4px; cursor: pointer; color: var(--text-muted); }
+    .preset-chip:hover { color: var(--accent); border-color: var(--accent); }
+
+    .results-container { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; max-height: 400px; overflow-y: auto; }
+    .hit-card { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+    .hit-title { font-weight: bold; color: var(--accent); font-size: 0.9rem; display: flex; justify-content: space-between; }
+    .hit-text { font-size: 0.8rem; color: var(--text-muted); }
+    .hit-score { font-size: 0.75rem; color: var(--success); font-family: monospace; }
+
+    .certificate-panel { background: rgba(88, 166, 255, 0.08); border: 1px solid rgba(88, 166, 255, 0.3); border-radius: 6px; padding: 10px 14px; font-size: 0.85rem; }
+    .cert-title { font-weight: bold; color: var(--accent); display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .cert-metric { font-size: 0.8rem; display: flex; justify-content: space-between; margin-bottom: 3px; }
+
+    .alert { padding: 10px 14px; border-radius: 6px; font-size: 0.85rem; margin-top: 10px; display: none; }
+    .alert.danger { background: rgba(248, 81, 73, 0.15); border: 1px solid var(--danger); color: #ff7b72; }
+    .alert.success { background: rgba(46, 160, 67, 0.15); border: 1px solid var(--success); color: #7ee787; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>
+      <span>Rosetta Shard</span>
+      <span class="status-badge green">Qdrant Edge Active</span>
+    </h1>
+    <div style="display: flex; gap: 10px;">
+      <button class="btn secondary" onclick="resetDemo()">Reset Demo</button>
+      <button class="btn secondary" id="btn-airplane" onclick="toggleAirplane()">Airplane Mode: OFF</button>
+      <button class="btn secondary" id="btn-guard" onclick="toggleSpaceGuard()">Space Guard: ACTIVE</button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <!-- Edge Panel -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Edge Device (Local Qdrant Shard)</span>
+        <span id="edge-space-badge" class="status-badge">bge-small (384-d)</span>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-label">Resident Space ID</div>
+          <div class="stat-val" id="edge-space">Loading...</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Stored Vectors</div>
+          <div class="stat-val" id="edge-points">-</div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px;">Query Local Edge Memory:</div>
+        <div class="query-box">
+          <input type="text" id="query-input" placeholder="Ask on-device knowledge base..." value="Lithium battery thermal degradation rate">
+          <button class="btn" onclick="submitQuery()">Search</button>
+        </div>
+      </div>
+
+      <div class="presets">
+        <span class="preset-chip" onclick="setQuery('Lithium battery thermal degradation rate')">In-Domain: Battery Thermal</span>
+        <span class="preset-chip" onclick="setQuery('Simultaneous localization SLAM on mobile robots')">In-Domain: Robotics SLAM</span>
+        <span class="preset-chip" onclick="setQuery('Cryptocurrency capital gains and tax policy')">OOD Shift: Crypto Taxes</span>
+      </div>
+
+      <div id="cert-box" class="certificate-panel" style="display: none;">
+        <div class="cert-title">
+          <span>Conformal Recall Certificate (α = 0.10)</span>
+          <span id="routing-badge" class="status-badge green">SERVE_LOCAL</span>
+        </div>
+        <div class="cert-metric">
+          <span>Certified Minimum Overlap (P ≥ 90%):</span>
+          <strong id="cert-overlap">-</strong>
+        </div>
+        <div class="cert-metric">
+          <span>Anchor Cosine Similarity (OOD check):</span>
+          <span id="cert-ood">-</span>
+        </div>
+        <div class="cert-metric">
+          <span>On-Device Query Latency:</span>
+          <span id="cert-latency">-</span>
+        </div>
+      </div>
+
+      <div id="alert-box" class="alert"></div>
+
+      <div class="results-container" id="results-list"></div>
+    </div>
+
+    <!-- Cloud Panel -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Cloud Intelligence & Model Coordination</span>
+        <span id="cloud-status-badge" class="status-badge green">Cloud Sync Ready</span>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-label">Active Cloud Model Space</div>
+          <div class="stat-val" id="cloud-space">Loading...</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Network Footprint</div>
+          <div class="stat-val" id="cloud-bytes">0 KB Sent / 0 KB Recv</div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+        <div style="font-size: 0.85rem; font-weight: bold; color: #fff;">Lifecycle Actions:</div>
+        
+        <button class="btn secondary" id="btn-upgrade" onclick="upgradeCloud()">
+          1. Upgrade Cloud Model to bge-large-en-v1.5 (1024-d)
+        </button>
+
+        <button class="btn secondary" id="btn-adapter" onclick="pushAdapter()">
+          2. Push Compact Adapter Bundle (128 KB)
+        </button>
+
+        <button class="btn" id="btn-migrate" onclick="runMigration()">
+          3. Atomic Migrate Shard to Large Space
+        </button>
+      </div>
+
+      <div id="migration-box" class="stat-card" style="display: none; margin-top: 10px; background: rgba(46, 160, 67, 0.08); border-color: var(--success);">
+        <div class="stat-label" style="color: var(--success); font-weight: bold;">Atomic Migration Benchmark:</div>
+        <div style="font-size: 0.85rem; margin-top: 4px;" id="migration-detail">-</div>
+      </div>
+
+      <div style="border-top: 1px solid var(--border); padding-top: 15px; margin-top: 10px;">
+        <div style="font-size: 0.85rem; font-weight: bold; color: #fff; margin-bottom: 6px;">Protocol Safety Assertions:</div>
+        <ul style="font-size: 0.78rem; color: var(--text-muted); list-style-type: square; padding-left: 20px;">
+          <li><b>Space Guard:</b> Queries validate resident coordinate space IDs to block silent retrieval collapse.</li>
+          <li><b>Recall Certificate:</b> Calibrated conformal guarantee certifies retrieval fidelity without the large model.</li>
+          <li><b>Crash-Safe:</b> Atomic temp shard staging guarantees old shard stays queryable on interruptions.</li>
+          <li><b>Zero Raw Text:</b> Adapter contains only weight matrices and centroids—private texts never leave edge.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function fetchStatus() {
+      const res = await fetch('/api/status');
+      const data = await res.json();
+      
+      document.getElementById('edge-space').innerText = data.device.space_id;
+      document.getElementById('edge-points').innerText = data.device.points + ' points (' + data.device.dim + '-d)';
+      document.getElementById('cloud-space').innerText = data.cloud.space_id;
+      document.getElementById('cloud-bytes').innerText = 
+        Math.round(data.cloud.bytes_sent / 1024) + ' KB sent / ' + 
+        Math.round(data.cloud.bytes_received / 1024) + ' KB recv';
+
+      document.getElementById('btn-airplane').innerText = 'Airplane Mode: ' + (data.device.airplane_mode ? 'ON' : 'OFF');
+      document.getElementById('btn-guard').innerText = 'Space Guard: ' + (data.device.space_guard_enabled ? 'ACTIVE' : 'BYPASSED');
+      document.getElementById('btn-guard').className = data.device.space_guard_enabled ? 'btn secondary' : 'btn danger';
+
+      if (data.device.migrated) {
+        document.getElementById('edge-space-badge').innerText = 'bge-large (1024-d Migrated)';
+        document.getElementById('edge-space-badge').className = 'status-badge green';
+      }
+    }
+
+    async function toggleAirplane() {
+      await fetch('/api/airplane', { method: 'POST' });
+      fetchStatus();
+    }
+
+    async function toggleSpaceGuard() {
+      await fetch('/api/space_guard', { method: 'POST' });
+      fetchStatus();
+    }
+
+    async function upgradeCloud() {
+      await fetch('/api/upgrade_cloud', { method: 'POST' });
+      showAlert('Cloud upgraded model to bge-large-en-v1.5 (1024-d). Vector coordinate spaces are now incompatible!', 'danger');
+      fetchStatus();
+    }
+
+    async function pushAdapter() {
+      const res = await fetch('/api/push_adapter', { method: 'POST' });
+      const data = await res.json();
+      showAlert('Adapter Bundle received (' + data.bundle_size_kb + ' KB). Ready for local atomic migration.', 'success');
+      fetchStatus();
+    }
+
+    async function runMigration() {
+      const res = await fetch('/api/migrate', { method: 'POST' });
+      if (!res.ok) {
+        const err = await res.json();
+        showAlert(err.detail || 'Migration failed', 'danger');
+        return;
+      }
+      const data = await res.json();
+      document.getElementById('migration-box').style.display = 'block';
+      document.getElementById('migration-detail').innerText = 
+        'Migrated ' + data.points_migrated + ' points in ' + data.elapsed_sec + 's (' + data.speedup_factor + 'x faster than on-device re-embedding estimate of ' + data.reembed_estimate_sec + 's)';
+      showAlert('Shard migrated atomically to 1024-d space without raw text!', 'success');
+      fetchStatus();
+    }
+
+    async function submitQuery() {
+      const q = document.getElementById('query-input').value;
+      const res = await fetch('/api/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: q })
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        if (data.blocked) {
+          showAlert('Space Guard Blocked Query: ' + data.message, 'danger');
+          document.getElementById('results-list').innerHTML = '';
+          document.getElementById('cert-box').style.display = 'none';
+        } else {
+          showAlert('Query error: ' + (data.detail || data.error), 'danger');
+        }
+        return;
+      }
+
+      hideAlert();
+      document.getElementById('cert-box').style.display = 'block';
+      document.getElementById('routing-badge').innerText = data.decision;
+      document.getElementById('routing-badge').className = 
+        data.decision === 'SERVE_LOCAL' ? 'status-badge green' : (data.decision === 'ESCALATE' ? 'status-badge yellow' : 'status-badge red');
+      
+      document.getElementById('cert-overlap').innerText = (data.certified_overlap * 100).toFixed(1) + '%';
+      document.getElementById('cert-ood').innerText = data.sim_anchor_max.toFixed(3);
+      document.getElementById('cert-latency').innerText = data.latency_ms + ' ms';
+
+      const resultsDiv = document.getElementById('results-list');
+      resultsDiv.innerHTML = '';
+      data.hits.forEach((h, idx) => {
+        const card = document.createElement('div');
+        card.className = 'hit-card';
+        card.innerHTML = `
+          <div class="hit-title">
+            <span>#${idx+1} ${h.title}</span>
+            <span class="hit-score">Score: ${h.score}</span>
+          </div>
+          <div class="hit-text">${h.text}</div>
+        `;
+        resultsDiv.appendChild(card);
+      });
+
+      fetchStatus();
+    }
+
+    function setQuery(text) {
+      document.getElementById('query-input').value = text;
+      submitQuery();
+    }
+
+    function showAlert(msg, type) {
+      const a = document.getElementById('alert-box');
+      a.className = 'alert ' + type;
+      a.innerText = msg;
+      a.style.display = 'block';
+    }
+
+    function hideAlert() {
+      document.getElementById('alert-box').style.display = 'none';
+    }
+
+    async function resetDemo() {
+      await fetch('/api/reset', { method: 'POST' });
+      document.getElementById('results-list').innerHTML = '';
+      document.getElementById('cert-box').style.display = 'none';
+      document.getElementById('migration-box').style.display = 'none';
+      hideAlert();
+      fetchStatus();
+    }
+
+    fetchStatus();
+  </script>
+</body>
+</html>

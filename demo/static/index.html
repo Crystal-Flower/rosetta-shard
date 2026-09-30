@@ -1,195 +1,408 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rosetta Shard — AI Edge Memory & Intelligence Platform</title>
-  <style>
-    :root {
-      --bg: #0d1117;
-      --panel: #161b22;
-      --border: #30363d;
-      --text: #c9d1d9;
-      --text-muted: #8b949e;
-      --accent: #58a6ff;
-      --success: #2ea043;
-      --warning: #d29922;
-      --danger: #f85149;
-      --badge-bg: #21262d;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace; }
-    body { background: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; }
-    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 20px; }
-    h1 { font-size: 1.4rem; color: #fff; display: flex; align-items: center; gap: 10px; }
-    .status-badge { font-size: 0.75rem; padding: 3px 8px; border-radius: 12px; background: var(--border); color: #fff; }
-    .status-badge.green { background: rgba(46, 160, 67, 0.2); color: var(--success); border: 1px solid var(--success); }
-    .status-badge.red { background: rgba(248, 81, 73, 0.2); color: var(--danger); border: 1px solid var(--danger); }
-    .status-badge.yellow { background: rgba(210, 153, 34, 0.2); color: var(--warning); border: 1px solid var(--warning); }
-    
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-    .panel-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-    .panel-title { font-size: 1.1rem; font-weight: bold; color: #fff; }
-    
-    .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.85rem; }
-    .stat-card { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; }
-    .stat-label { color: var(--text-muted); font-size: 0.75rem; }
-    .stat-val { font-size: 0.95rem; font-weight: bold; color: #fff; word-break: break-all; }
-
-    .btn { background: #238636; color: #fff; border: 1px solid rgba(240,246,252,0.1); border-radius: 6px; padding: 8px 14px; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
-    .btn:hover { background: #2ea043; }
-    .btn.secondary { background: #21262d; border-color: var(--border); color: var(--text); }
-    .btn.secondary:hover { background: #30363d; }
-    .btn.danger { background: #da3633; }
-    .btn.danger:hover { background: #f85149; }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .query-box { display: flex; gap: 8px; }
-    input[type="text"] { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; color: #fff; font-size: 0.9rem; }
-    input[type="text"]:focus { outline: none; border-color: var(--accent); }
-
-    .presets { display: flex; gap: 6px; flex-wrap: wrap; }
-    .preset-chip { font-size: 0.75rem; background: var(--bg); border: 1px solid var(--border); padding: 4px 8px; border-radius: 4px; cursor: pointer; color: var(--text-muted); }
-    .preset-chip:hover { color: var(--accent); border-color: var(--accent); }
-
-    .results-container { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; max-height: 400px; overflow-y: auto; }
-    .hit-card { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
-    .hit-title { font-weight: bold; color: var(--accent); font-size: 0.9rem; display: flex; justify-content: space-between; }
-    .hit-text { font-size: 0.8rem; color: var(--text-muted); }
-    .hit-score { font-size: 0.75rem; color: var(--success); font-family: monospace; }
-
-    .certificate-panel { background: rgba(88, 166, 255, 0.08); border: 1px solid rgba(88, 166, 255, 0.3); border-radius: 6px; padding: 10px 14px; font-size: 0.85rem; }
-    .cert-title { font-weight: bold; color: var(--accent); display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-    .cert-metric { font-size: 0.8rem; display: flex; justify-content: space-between; margin-bottom: 3px; }
-
-    .alert { padding: 10px 14px; border-radius: 6px; font-size: 0.85rem; margin-top: 10px; display: none; }
-    .alert.danger { background: rgba(248, 81, 73, 0.15); border: 1px solid var(--danger); color: #ff7b72; }
-    .alert.success { background: rgba(46, 160, 67, 0.15); border: 1px solid var(--success); color: #7ee787; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rosetta Shard — Edge Memory That Survives Model Upgrades</title>
+<style>
+:root{
+  --bg:#f7f9fc;--white:#fff;--ink:#111827;--text:#344054;--muted:#667085;
+  --line:#e4eaf2;--blue:#2563eb;--blue2:#1d4ed8;--cyan:#0891b2;
+  --green:#16a34a;--amber:#d97706;--red:#dc2626;
+  --shadow:0 20px 60px rgba(30,55,90,.09);--soft:0 8px 28px rgba(30,55,90,.07)
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:
+    radial-gradient(circle at 10% 0%,rgba(37,99,235,.09),transparent 25%),
+    radial-gradient(circle at 90% 5%,rgba(8,145,178,.07),transparent 22%),
+    var(--bg);color:var(--text);line-height:1.6
+}
+a{text-decoration:none;color:inherit}
+.container{width:min(1180px,calc(100% - 40px));margin:auto}
+nav{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);
+  border-bottom:1px solid rgba(228,234,242,.9);backdrop-filter:blur(16px)
+}
+.nav-inner{height:72px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px;font-weight:850;color:var(--ink)}
+.logo{
+  width:38px;height:38px;border-radius:12px;display:grid;place-items:center;
+  color:white;font-size:12px;font-weight:900;
+  background:linear-gradient(135deg,var(--blue),var(--cyan));
+  box-shadow:0 8px 20px rgba(37,99,235,.22)
+}
+.nav-links{display:flex;gap:25px;font-size:13px;color:#667085;font-weight:650}
+.nav-links a:hover{color:var(--blue)}
+.nav-cta{padding:10px 16px;border-radius:10px;background:var(--ink);color:#fff;font-size:13px;font-weight:750}
+.hero{padding:92px 0 72px;text-align:center}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;
+  background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;font-size:12px;font-weight:800;
+  letter-spacing:.04em;text-transform:uppercase
+}
+.dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 5px #dcfce7}
+.hero h1{
+  max-width:920px;margin:22px auto 18px;font-size:clamp(42px,6vw,76px);
+  line-height:1.02;letter-spacing:-.055em;color:#101828;font-weight:900
+}
+.gradient{background:linear-gradient(100deg,#2563eb,#0891b2);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:760px;margin:auto;font-size:18px;color:#667085}
+.hero-actions{display:flex;justify-content:center;gap:12px;margin-top:30px;flex-wrap:wrap}
+.btn{
+  border:1px solid #cfd8e5;padding:13px 19px;border-radius:11px;font-size:14px;font-weight:800;
+  cursor:pointer;background:#fff;color:#344054;box-shadow:var(--soft)
+}
+.btn.primary{background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:#1d4ed8;color:#fff}
+.btn.dark{background:#111827;color:#fff;border-color:#111827}
+.hero-note{margin-top:14px;font-size:12px;color:#98a2b3}
+.visual{
+  margin:36px auto 0;max-width:1040px;background:#fff;border:1px solid var(--line);
+  border-radius:24px;box-shadow:0 28px 80px rgba(30,55,90,.12);padding:12px
+}
+.visual-inner{
+  min-height:360px;border-radius:17px;overflow:hidden;
+  background:linear-gradient(135deg,#f8fbff,#eef5ff);border:1px solid #dfe8f4;
+  display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:12px;padding:22px;align-items:center
+}
+.node{
+  background:#fff;border:1px solid #dbe5f0;border-radius:16px;padding:20px;text-align:left;
+  box-shadow:var(--soft)
+}
+.node h3{font-size:14px;color:#172033;margin-bottom:5px}
+.node p{font-size:12px;color:#667085}
+.node .icon{
+  width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+  background:#eff6ff;color:#2563eb;font-weight:900;margin-bottom:12px
+}
+.flow{text-align:center;color:#2563eb;font-size:28px;font-weight:900}
+.flow small{display:block;font-size:10px;color:#667085;font-weight:750;letter-spacing:.08em}
+.section{padding:78px 0}
+.section.alt{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.section-head{max-width:740px;margin-bottom:35px}
+.kicker{font-size:11px;font-weight:850;text-transform:uppercase;letter-spacing:.12em;color:#2563eb}
+.section h2{font-size:clamp(30px,4vw,48px);line-height:1.08;letter-spacing:-.04em;color:#101828;margin:8px 0 13px}
+.section-head p{font-size:16px;color:#667085}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{
+  background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--soft)
+}
+.card h3{font-size:17px;color:#172033;margin:10px 0 7px}
+.card p{font-size:13px;color:#667085}
+.card-icon{
+  width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+  background:#eff6ff;color:#2563eb;font-weight:900
+}
+.problem{border-left:4px solid #dc2626}
+.solution{border-left:4px solid #16a34a}
+.flow-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.step{position:relative;padding:22px 18px;background:#fff;border:1px solid var(--line);border-radius:16px}
+.step-no{font-size:11px;color:#2563eb;font-weight:900}
+.step h3{font-size:15px;color:#172033;margin:8px 0 5px}
+.step p{font-size:12px;color:#667085}
+.arch{
+  background:#0f172a;border-radius:22px;padding:25px;color:#dbeafe;
+  box-shadow:0 25px 65px rgba(15,23,42,.18)
+}
+.arch-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:stretch}
+.arch-box{border:1px solid #334155;background:#172033;border-radius:14px;padding:18px}
+.arch-box h3{color:#fff;font-size:14px;margin-bottom:6px}
+.arch-box p{font-size:12px;color:#94a3b8}
+.arch-box.highlight{border-color:#60a5fa;background:linear-gradient(135deg,#172554,#0f2944)}
+.metric{
+  text-align:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px
+}
+.metric strong{display:block;font-size:29px;color:#172033;letter-spacing:-.04em}
+.metric span{font-size:11px;color:#667085;font-weight:700;text-transform:uppercase;letter-spacing:.07em}
+.demo-wrap{background:#f8fbff;border:1px solid #dce8f5;border-radius:24px;padding:24px}
+.demo-header{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px}
+.demo-header h3{color:#172033;font-size:20px}
+.live{color:#15803d;background:#ecfdf3;border:1px solid #86efac;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800}
+.dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.panel{
+  background:#fff;border:1px solid var(--line);border-radius:17px;padding:20px;
+  box-shadow:var(--soft);display:flex;flex-direction:column;gap:14px
+}
+.panel-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #edf1f6;padding-bottom:12px}
+.panel-title{font-size:14px;font-weight:850;color:#172033}
+.status-badge{font-size:10px;font-weight:800;padding:5px 9px;border-radius:999px;background:#eef2f7;color:#475467;border:1px solid #d5deea}
+.status-badge.green{background:#ecfdf3;color:#15803d;border-color:#86efac}
+.status-badge.red{background:#fef2f2;color:#b91c1c;border-color:#fca5a5}
+.status-badge.yellow{background:#fffbeb;color:#b45309;border-color:#fcd34d}
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:11px;padding:10px}
+.stat-label{font-size:10px;color:#667085;text-transform:uppercase;letter-spacing:.05em}
+.stat-val{font-size:13px;font-weight:800;color:#172033}
+.query-box{display:flex;gap:8px}
+input[type=text]{flex:1;border:1px solid #cbd5e1;border-radius:9px;padding:9px 11px;background:#fff;color:#172033}
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+.preset-chip{font-size:10px;background:#fff;border:1px solid #d7e0eb;padding:5px 8px;border-radius:999px;color:#667085;cursor:pointer}
+.certificate-panel{background:#eff6ff;border:1px solid #bfdbfe;border-radius:11px;padding:10px;font-size:11px}
+.cert-title{font-weight:850;color:#1d4ed8;display:flex;justify-content:space-between;margin-bottom:5px}
+.cert-metric{display:flex;justify-content:space-between;color:#475467}
+.alert{padding:9px;border-radius:9px;font-size:11px;display:none}
+.alert.danger{background:#fff1f2;border:1px solid #fda4af;color:#b42318}
+.alert.success{background:#ecfdf3;border:1px solid #86efac;color:#027a48}
+.results-container{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow:auto}
+.hit-card{background:#fbfdff;border:1px solid #dfe7f1;border-radius:10px;padding:10px}
+.hit-title{font-size:11px;font-weight:800;color:#1d4ed8;display:flex;justify-content:space-between}
+.hit-text{font-size:10px;color:#667085}
+.hit-score{font-size:10px;color:#15803d}
+.footer{padding:55px 0 70px;text-align:center}
+.footer h2{font-size:32px;color:#101828;letter-spacing:-.04em}
+.footer p{color:#667085;margin:10px auto 22px;max-width:600px;font-size:14px}
+@media(max-width:900px){
+  .nav-links{display:none}.grid2,.dashboard-grid{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr 1fr}.flow-grid{grid-template-columns:1fr 1fr}
+  .arch-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .container{width:min(100% - 24px,1180px)}.hero{padding:65px 0 45px}
+  .hero h1{font-size:42px}.grid3,.flow-grid{grid-template-columns:1fr}
+  .visual-inner{grid-template-columns:1fr}.flow{transform:rotate(90deg)}
+}
+</style>
 </head>
 <body>
 
-  <header>
-    <h1>
-      <span>Rosetta Shard</span>
-      <span class="status-badge green">Qdrant Edge Active</span>
-    </h1>
-    <div style="display: flex; gap: 10px;">
-      <button class="btn secondary" onclick="resetDemo()">Reset Demo</button>
-      <button class="btn secondary" id="btn-airplane" onclick="toggleAirplane()">Airplane Mode: OFF</button>
-      <button class="btn secondary" id="btn-guard" onclick="toggleSpaceGuard()">Space Guard: ACTIVE</button>
+<nav>
+  <div class="container nav-inner">
+    <a href="#" class="brand"><span class="logo">RS</span> Rosetta Shard</a>
+    <div class="nav-links">
+      <a href="#problem">Problem</a><a href="#solution">Solution</a><a href="#architecture">Architecture</a>
+      <a href="#demo">Live Demo</a><a href="#security">Security</a>
     </div>
-  </header>
+    <a class="nav-cta" href="#demo">Launch Demo →</a>
+  </div>
+</nav>
 
-  <div class="grid">
-    <!-- Edge Panel -->
-    <div class="panel">
-      <div class="panel-header">
-        <span class="panel-title">Edge Device (Local Qdrant Shard)</span>
-        <span id="edge-space-badge" class="status-badge">bge-small (384-d)</span>
-      </div>
-
-      <div class="stat-row">
-        <div class="stat-card">
-          <div class="stat-label">Resident Space ID</div>
-          <div class="stat-val" id="edge-space">Loading...</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Stored Vectors</div>
-          <div class="stat-val" id="edge-points">-</div>
-        </div>
-      </div>
-
-      <div>
-        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px;">Query Local Edge Memory:</div>
-        <div class="query-box">
-          <input type="text" id="query-input" placeholder="Ask on-device knowledge base..." value="Lithium battery thermal degradation rate">
-          <button class="btn" onclick="submitQuery()">Search</button>
-        </div>
-      </div>
-
-      <div class="presets">
-        <span class="preset-chip" onclick="setQuery('Lithium battery thermal degradation rate')">In-Domain: Battery Thermal</span>
-        <span class="preset-chip" onclick="setQuery('Simultaneous localization SLAM on mobile robots')">In-Domain: Robotics SLAM</span>
-        <span class="preset-chip" onclick="setQuery('Cryptocurrency capital gains and tax policy')">OOD Shift: Crypto Taxes</span>
-      </div>
-
-      <div id="cert-box" class="certificate-panel" style="display: none;">
-        <div class="cert-title">
-          <span>Conformal Recall Certificate (α = 0.10)</span>
-          <span id="routing-badge" class="status-badge green">SERVE_LOCAL</span>
-        </div>
-        <div class="cert-metric">
-          <span>Certified Minimum Overlap (P ≥ 90%):</span>
-          <strong id="cert-overlap">-</strong>
-        </div>
-        <div class="cert-metric">
-          <span>Anchor Cosine Similarity (OOD check):</span>
-          <span id="cert-ood">-</span>
-        </div>
-        <div class="cert-metric">
-          <span>On-Device Query Latency:</span>
-          <span id="cert-latency">-</span>
-        </div>
-      </div>
-
-      <div id="alert-box" class="alert"></div>
-
-      <div class="results-container" id="results-list"></div>
+<main>
+<section class="hero">
+  <div class="container">
+    <span class="eyebrow"><span class="dot"></span> AI-Powered Edge Memory & Intelligence Platform</span>
+    <h1>Memory that <span class="gradient">survives model upgrades.</span></h1>
+    <p>
+      Rosetta Shard keeps AI memory local, private, searchable and usable even when the embedding model changes.
+      It detects incompatible vector spaces, certifies retrieval quality, and migrates edge memory without sending raw text to the cloud.
+    </p>
+    <div class="hero-actions">
+      <a class="btn primary" href="#demo">▶ Experience the Live Demo</a>
+      <a class="btn dark" href="#architecture">Explore Architecture</a>
     </div>
+    <div class="hero-note">Built for privacy-sensitive edge AI • resilient to model lifecycle changes • crash-safe migration</div>
 
-    <!-- Cloud Panel -->
-    <div class="panel">
-      <div class="panel-header">
-        <span class="panel-title">Cloud Intelligence & Model Coordination</span>
-        <span id="cloud-status-badge" class="status-badge green">Cloud Sync Ready</span>
-      </div>
-
-      <div class="stat-row">
-        <div class="stat-card">
-          <div class="stat-label">Active Cloud Model Space</div>
-          <div class="stat-val" id="cloud-space">Loading...</div>
+    <div class="visual">
+      <div class="visual-inner">
+        <div class="node">
+          <div class="icon">EDGE</div>
+          <h3>Local Memory</h3>
+          <p>Qdrant shard + compact embeddings. Data remains on the device.</p>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Network Footprint</div>
-          <div class="stat-val" id="cloud-bytes">0 KB Sent / 0 KB Recv</div>
+        <div class="flow">⇄<small>CERTIFIED ROUTING + MIGRATION</small></div>
+        <div class="node">
+          <div class="icon">AI</div>
+          <h3>Cloud Intelligence</h3>
+          <p>Upgrade models without forcing raw private memory off the edge.</p>
         </div>
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
-        <div style="font-size: 0.85rem; font-weight: bold; color: #fff;">Lifecycle Actions:</div>
-        
-        <button class="btn secondary" id="btn-upgrade" onclick="upgradeCloud()">
-          1. Upgrade Cloud Model to bge-large-en-v1.5 (1024-d)
-        </button>
-
-        <button class="btn secondary" id="btn-adapter" onclick="pushAdapter()">
-          2. Push Compact Adapter Bundle (128 KB)
-        </button>
-
-        <button class="btn" id="btn-migrate" onclick="runMigration()">
-          3. Atomic Migrate Shard to Large Space
-        </button>
-      </div>
-
-      <div id="migration-box" class="stat-card" style="display: none; margin-top: 10px; background: rgba(46, 160, 67, 0.08); border-color: var(--success);">
-        <div class="stat-label" style="color: var(--success); font-weight: bold;">Atomic Migration Benchmark:</div>
-        <div style="font-size: 0.85rem; margin-top: 4px;" id="migration-detail">-</div>
-      </div>
-
-      <div style="border-top: 1px solid var(--border); padding-top: 15px; margin-top: 10px;">
-        <div style="font-size: 0.85rem; font-weight: bold; color: #fff; margin-bottom: 6px;">Protocol Safety Assertions:</div>
-        <ul style="font-size: 0.78rem; color: var(--text-muted); list-style-type: square; padding-left: 20px;">
-          <li><b>Space Guard:</b> Queries validate resident coordinate space IDs to block silent retrieval collapse.</li>
-          <li><b>Recall Certificate:</b> Calibrated conformal guarantee certifies retrieval fidelity without the large model.</li>
-          <li><b>Crash-Safe:</b> Atomic temp shard staging guarantees old shard stays queryable on interruptions.</li>
-          <li><b>Zero Raw Text:</b> Adapter contains only weight matrices and centroids—private texts never leave edge.</li>
-        </ul>
       </div>
     </div>
   </div>
+</section>
 
-  <script>
+<section class="section" id="problem">
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">The problem</div>
+    <h2>AI memory breaks when the model changes.</h2>
+    <p>Vector databases are not automatically model-agnostic. Change the embedding model and the old vectors can live in a different coordinate space.</p>
+  </div>
+  <div class="grid2">
+    <div class="card problem">
+      <div class="card-icon">!</div><h3>Silent retrieval collapse</h3>
+      <p>An upgraded model can produce vectors that are incompatible with the resident shard. Similarity search may still return results, creating the illusion that the system works.</p>
+    </div>
+    <div class="card problem">
+      <div class="card-icon">↗</div><h3>Expensive re-embedding</h3>
+      <p>Re-embedding every private memory on-device can be slow, compute-heavy and operationally painful—especially for disconnected edge devices.</p>
+    </div>
+    <div class="card problem">
+      <div class="card-icon">☁</div><h3>Privacy leakage risk</h3>
+      <p>Moving raw text to the cloud just to rebuild an embedding index defeats the privacy advantage of local AI memory.</p>
+    </div>
+    <div class="card problem">
+      <div class="card-icon">⚠</div><h3>Unsafe migrations</h3>
+      <p>A device crash during migration can leave a memory system partially upgraded and unavailable unless the transition is atomic.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section alt" id="solution">
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">The solution</div>
+    <h2>Rosetta Shard makes model evolution safe.</h2>
+    <p>A local memory layer that understands vector-space compatibility instead of blindly trusting similarity scores.</p>
+  </div>
+  <div class="grid3">
+    <div class="card solution"><div class="card-icon">01</div><h3>Space Guard</h3><p>Validates the resident vector-space identity before serving retrieval. If the coordinate space is incompatible, the query is blocked instead of silently returning misleading memory.</p></div>
+    <div class="card solution"><div class="card-icon">02</div><h3>Conformal Recall Certificate</h3><p>Uses a calibrated overlap guarantee to communicate whether local retrieval meets the required confidence threshold before the system serves it.</p></div>
+    <div class="card solution"><div class="card-icon">03</div><h3>Compact Adapter</h3><p>Transfers the transformation information needed for migration rather than shipping private raw text to the cloud.</p></div>
+    <div class="card solution"><div class="card-icon">04</div><h3>Atomic Shard Migration</h3><p>Stages a new shard and switches over atomically, keeping the old shard queryable if migration is interrupted.</p></div>
+    <div class="card solution"><div class="card-icon">05</div><h3>Airplane-Mode Ready</h3><p>The edge memory layer can continue operating locally when network connectivity disappears.</p></div>
+    <div class="card solution"><div class="card-icon">06</div><h3>Zero Raw Text Transfer</h3><p>The adapter path is designed around model parameters and centroids, keeping private source text on the edge.</p></div>
+  </div>
+</div>
+</section>
+
+<section class="section" id="how">
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">How it works</div>
+    <h2>From query to safe model migration.</h2>
+    <p>The demo is designed to tell the entire product story in a few clicks.</p>
+  </div>
+  <div class="flow-grid">
+    <div class="step"><span class="step-no">STEP 01</span><h3>Query</h3><p>Ask the local edge memory a normal semantic question.</p></div>
+    <div class="step"><span class="step-no">STEP 02</span><h3>Validate</h3><p>Space Guard checks model-space compatibility before retrieval.</p></div>
+    <div class="step"><span class="step-no">STEP 03</span><h3>Certify</h3><p>Conformal recall metrics expose retrieval confidence and latency.</p></div>
+    <div class="step"><span class="step-no">STEP 04</span><h3>Upgrade</h3><p>Cloud model changes to a larger embedding space.</p></div>
+    <div class="step"><span class="step-no">STEP 05</span><h3>Migrate</h3><p>Compact adapter + atomic shard migration upgrades local memory.</p></div>
+  </div>
+</div>
+</section>
+
+<section class="section alt" id="architecture">
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">Architecture</div>
+    <h2>Three layers. One resilient memory protocol.</h2>
+    <p>Rosetta Shard separates private memory, model intelligence and migration safety into explicit responsibilities.</p>
+  </div>
+  <div class="arch">
+    <div class="arch-grid">
+      <div class="arch-box"><h3>01 · Edge Memory</h3><p>Local Qdrant shard, resident space ID, embeddings and private knowledge. Designed for low-latency retrieval and disconnected operation.</p></div>
+      <div class="arch-box highlight"><h3>02 · Rosetta Protocol</h3><p>Space Guard + conformal certificate + adapter metadata + atomic migration coordinate the model lifecycle without exposing raw text.</p></div>
+      <div class="arch-box"><h3>03 · Cloud Intelligence</h3><p>New embedding model, compact adapter bundle and lifecycle operations. The cloud coordinates the upgrade instead of owning the private memory.</p></div>
+    </div>
+  </div>
+  <div class="grid3" style="margin-top:18px">
+    <div class="metric"><strong>384 → 1024-d</strong><span>Embedding-space evolution</span></div>
+    <div class="metric"><strong>α = 0.10</strong><span>Recall certificate setting</span></div>
+    <div class="metric"><strong>0 raw text</strong><span>Required for adapter transfer</span></div>
+  </div>
+</div>
+</section>
+
+<section class="section" id="security">
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">Trust & safety</div>
+    <h2>Designed for edge AI where memory is sensitive.</h2>
+    <p>The product story is not only about performance. It is about making model upgrades observable, controlled and recoverable.</p>
+  </div>
+  <div class="grid2">
+    <div class="card"><div class="card-icon">✓</div><h3>Compatibility before retrieval</h3><p>Space Guard prevents the system from treating an incompatible vector space as if it were valid.</p></div>
+    <div class="card"><div class="card-icon">✓</div><h3>Observable decisions</h3><p>The demo exposes SERVE_LOCAL and ESCALATE routing decisions, overlap, similarity and latency instead of hiding them behind a black box.</p></div>
+    <div class="card"><div class="card-icon">✓</div><h3>Crash-safe transition</h3><p>Migration is staged before the final switch, so interruptions do not require destroying the known-good shard.</p></div>
+    <div class="card"><div class="card-icon">✓</div><h3>Privacy-first upgrade path</h3><p>The protocol is built around transferring compact migration information rather than private source documents.</p></div>
+  </div>
+</div>
+</section>
+
+<section class="section alt" id="demo">
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">Live product demo</div>
+    <h2>Now show the judges the failure—and fix it.</h2>
+    <p>This interactive console is the centerpiece of the pitch. Run the sequence below to demonstrate why Rosetta Shard exists.</p>
+  </div>
+  <div class="demo-wrap">
+    <div class="demo-header">
+      <h3>Rosetta Shard Control Center</h3><span class="live">● LIVE DEMO</span>
+    </div>
+    <div class="dashboard-grid">
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">Edge Device · Local Qdrant Shard</span><span id="edge-space-badge" class="status-badge">bge-small (384-d)</span></div>
+        <div class="stat-row">
+          <div class="stat-card"><div class="stat-label">Resident Space</div><div class="stat-val" id="edge-space">Loading...</div></div>
+          <div class="stat-card"><div class="stat-label">Stored Vectors</div><div class="stat-val" id="edge-points">-</div></div>
+        </div>
+        <div><div style="font-size:11px;color:#667085;margin-bottom:6px">QUERY LOCAL EDGE MEMORY</div><div class="query-box"><input type="text" id="query-input" value="Lithium battery thermal degradation rate"><button class="btn primary" onclick="submitQuery()">Search</button></div></div>
+        <div class="presets">
+          <span class="preset-chip" onclick="setQuery('Lithium battery thermal degradation rate')">Battery Thermal</span>
+          <span class="preset-chip" onclick="setQuery('Simultaneous localization SLAM on mobile robots')">Robotics SLAM</span>
+          <span class="preset-chip" onclick="setQuery('Cryptocurrency capital gains and tax policy')">OOD Shift</span>
+        </div>
+        <div id="cert-box" class="certificate-panel" style="display:none">
+          <div class="cert-title"><span>Conformal Recall Certificate</span><span id="routing-badge" class="status-badge green">SERVE_LOCAL</span></div>
+          <div class="cert-metric"><span>Certified overlap</span><strong id="cert-overlap">-</strong></div>
+          <div class="cert-metric"><span>Anchor similarity</span><span id="cert-ood">-</span></div>
+          <div class="cert-metric"><span>Local latency</span><span id="cert-latency">-</span></div>
+        </div>
+        <div id="alert-box" class="alert"></div>
+        <div class="results-container" id="results-list"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">Cloud Intelligence & Model Coordination</span><span id="cloud-status-badge" class="status-badge green">Cloud Sync Ready</span></div>
+        <div class="stat-row">
+          <div class="stat-card"><div class="stat-label">Cloud Model Space</div><div class="stat-val" id="cloud-space">Loading...</div></div>
+          <div class="stat-card"><div class="stat-label">Network Footprint</div><div class="stat-val" id="cloud-bytes">0 KB Sent / 0 KB Recv</div></div>
+        </div>
+        <div style="font-size:12px;font-weight:800;color:#172033">MODEL LIFECYCLE</div>
+        <button class="btn" id="btn-upgrade" onclick="upgradeCloud()">1 · Upgrade Cloud Model → bge-large (1024-d)</button>
+        <button class="btn" id="btn-adapter" onclick="pushAdapter()">2 · Push Compact Adapter Bundle (128 KB)</button>
+        <button class="btn primary" id="btn-migrate" onclick="runMigration()">3 · Atomic Migrate Shard</button>
+        <div id="migration-box" class="stat-card" style="display:none;background:#ecfdf3;border-color:#86efac"><div class="stat-label" style="color:#15803d">Atomic Migration Benchmark</div><div id="migration-detail" style="font-size:11px;margin-top:3px">-</div></div>
+        <div style="border-top:1px solid #edf1f6;padding-top:14px">
+          <div style="font-size:12px;font-weight:800;color:#172033;margin-bottom:6px">PROTOCOL ASSERTIONS</div>
+          <ul style="font-size:11px;padding-left:17px;color:#667085">
+            <li><b>Space Guard:</b> blocks incompatible resident coordinate spaces.</li>
+            <li><b>Recall Certificate:</b> exposes calibrated retrieval fidelity.</li>
+            <li><b>Crash-Safe:</b> staged migration protects the old shard.</li>
+            <li><b>Zero Raw Text:</b> adapter transfer keeps private text on edge.</li>
+          </ul>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:auto">
+          <button class="btn" onclick="toggleAirplane()" id="btn-airplane">Airplane Mode: OFF</button>
+          <button class="btn" onclick="toggleSpaceGuard()" id="btn-guard">Space Guard: ACTIVE</button>
+          <button class="btn" onclick="resetDemo()">Reset Demo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section">
+<div class="container">
+  <div class="section-head">
+    <div class="kicker">Use cases</div>
+    <h2>Where model-resilient edge memory matters.</h2>
+  </div>
+  <div class="grid3">
+    <div class="card"><div class="card-icon">R</div><h3>Robotics</h3><p>Keep local operational memory on robots while upgrading perception and language models over time.</p></div>
+    <div class="card"><div class="card-icon">M</div><h3>Medical & industrial edge</h3><p>Support privacy-sensitive environments where raw records should remain on the device or local infrastructure.</p></div>
+    <div class="card"><div class="card-icon">A</div><h3>Autonomous systems</h3><p>Maintain useful memory during connectivity gaps and avoid rebuilding an entire knowledge base after every model upgrade.</p></div>
+  </div>
+</div>
+</section>
+
+<section class="footer">
+<div class="container">
+  <h2>Upgrade the model. Keep the memory.</h2>
+  <p>Rosetta Shard turns embedding-model evolution from a risky memory reset into a controlled, observable and privacy-first lifecycle.</p>
+  <a class="btn primary" href="#demo">Launch the Rosetta Shard Demo →</a>
+</div>
+</section>
+</main>
+
+<script>
+
     async function fetchStatus() {
       const res = await fetch('/api/status');
       const data = await res.json();
@@ -323,6 +536,7 @@
     }
 
     fetchStatus();
-  </script>
+  
+</script>
 </body>
 </html>
