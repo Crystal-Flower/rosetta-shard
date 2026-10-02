@@ -27,6 +27,192 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   --radius: 16px;
 }
+
+[data-theme="light"] {
+  --bg: #f8fafc;
+  --bg-card: rgba(255, 255, 255, 0.96);
+  --bg-card-hover: #f1f5f9;
+  --line: #e2e8f0;
+  --line-active: rgba(2, 132, 199, 0.4);
+  --text-main: #0f172a;
+  --text-muted: #475467;
+  --text-dim: #64748b;
+  --cyan: #0284c7;
+  --cyan-glow: rgba(2, 132, 199, 0.15);
+  --blue: #2563eb;
+  --blue-light: #3b82f6;
+  --emerald: #059669;
+  --emerald-glow: rgba(5, 150, 105, 0.15);
+  --amber: #d97706;
+  --amber-glow: rgba(217, 119, 6, 0.15);
+  --rose: #e11d48;
+  --rose-glow: rgba(225, 29, 72, 0.15);
+}
+
+[data-theme="light"] body {
+  background: radial-gradient(circle at 15% 10%, rgba(37, 99, 235, 0.05), transparent 30%),
+              radial-gradient(circle at 85% 15%, rgba(2, 132, 199, 0.04), transparent 35%),
+              radial-gradient(circle at 50% 90%, rgba(16, 185, 129, 0.03), transparent 40%),
+              var(--bg);
+  color: var(--text-main);
+}
+
+[data-theme="light"] header {
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid var(--line);
+}
+
+[data-theme="light"] .brand-title { color: #0f172a; }
+[data-theme="light"] .nav-tabs { background: #f1f5f9; border-color: #e2e8f0; }
+[data-theme="light"] .tab-btn { color: #64748b; }
+[data-theme="light"] .tab-btn:hover { color: #0f172a; }
+[data-theme="light"] .tab-btn.active {
+  background: #ffffff; color: #0284c7; border: 1px solid #cbd5e1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .scenario-banner {
+  background: linear-gradient(135deg, #ffffff, #f8fafc);
+  border-color: #e2e8f0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+[data-theme="light"] .scenario-headline { color: #0f172a; }
+[data-theme="light"] .scenario-badge {
+  background: rgba(217, 119, 6, 0.1); border-color: rgba(217, 119, 6, 0.3); color: #b45309;
+}
+
+[data-theme="light"] .crisis-pipeline-card,
+[data-theme="light"] .cockpit-panel,
+[data-theme="light"] .spec-table-card,
+[data-theme="light"] .qna-box,
+[data-theme="light"] .ledger-banner {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .stage-item {
+  background: #f8fafc; border-color: #e2e8f0;
+}
+[data-theme="light"] .stage-item:hover {
+  background: #f1f5f9;
+}
+[data-theme="light"] .stage-item.active {
+  background: #eff6ff; border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.15);
+}
+[data-theme="light"] .stage-item.completed {
+  background: #ecfdf3; border-color: #86efac;
+}
+[data-theme="light"] .stage-name { color: #0f172a; }
+
+[data-theme="light"] .narrative-strip {
+  background: #eff6ff; border-color: #bfdbfe; color: #1e40af;
+}
+[data-theme="light"] .narrative-strip b { color: #1e3a8a; }
+
+[data-theme="light"] .stat-card {
+  background: #f8fafc; border-color: #e2e8f0;
+}
+[data-theme="light"] .stat-value { color: #0f172a; }
+[data-theme="light"] .panel-name { color: #0f172a; }
+[data-theme="light"] .panel-icon {
+  background: #f1f5f9; border-color: #e2e8f0;
+}
+
+[data-theme="light"] .search-input {
+  background: #ffffff; border-color: #cbd5e1; color: #0f172a;
+}
+[data-theme="light"] .search-input:focus {
+  border-color: #0284c7; box-shadow: 0 0 12px rgba(2, 132, 199, 0.2);
+}
+
+[data-theme="light"] .preset-tag {
+  background: #f1f5f9; border-color: #e2e8f0; color: #475467;
+}
+[data-theme="light"] .preset-tag:hover {
+  background: #eff6ff; border-color: #93c5fd; color: #0284c7;
+}
+
+[data-theme="light"] .trust-gauge-panel {
+  background: #ffffff; border-color: #e2e8f0;
+}
+[data-theme="light"] .trust-badge-label { color: #0f172a; }
+[data-theme="light"] .gauge-value-text { color: #0f172a; }
+[data-theme="light"] .readout-val { color: #0f172a; }
+
+[data-theme="light"] .hit-item {
+  background: #ffffff; border-color: #e2e8f0;
+}
+[data-theme="light"] .hit-item:hover {
+  border-color: #93c5fd;
+}
+[data-theme="light"] .hit-doc-title { color: #0284c7; }
+[data-theme="light"] .hit-doc-score { color: #059669; }
+
+[data-theme="light"] .action-card-btn {
+  background: #f8fafc; border-color: #e2e8f0;
+}
+[data-theme="light"] .action-card-btn:hover {
+  background: #f1f5f9;
+}
+[data-theme="light"] .action-card-btn.primary {
+  background: #eff6ff; border-color: #60a5fa;
+}
+[data-theme="light"] .action-badge-step {
+  background: #e2e8f0; color: #0f172a;
+}
+[data-theme="light"] .action-text-title { color: #0f172a; }
+
+[data-theme="light"] .btn-toggle {
+  background: #f1f5f9; border-color: #e2e8f0; color: #475467;
+}
+[data-theme="light"] .btn-toggle:hover {
+  background: #e2e8f0; color: #0f172a;
+}
+[data-theme="light"] .btn-reset {
+  background: #f1f5f9; border-color: #e2e8f0; color: #475467;
+}
+[data-theme="light"] .btn-reset:hover {
+  background: #e2e8f0; color: #0f172a;
+}
+
+[data-theme="light"] .ledger-val { color: #0f172a; }
+[data-theme="light"] .ledger-icon {
+  background: #f1f5f9; border-color: #e2e8f0;
+}
+
+[data-theme="light"] .comp-naive {
+  background: #fff1f2; border-color: #fecdd3;
+}
+[data-theme="light"] .comp-rosetta {
+  background: #ecfdf3; border-color: #a7f3d0;
+}
+[data-theme="light"] .comp-body { color: #475467; }
+[data-theme="light"] .comp-body strong { color: #0f172a; }
+
+[data-theme="light"] .qna-q { color: #0f172a; }
+[data-theme="light"] .spec-table th { color: #0284c7; border-color: #e2e8f0; }
+[data-theme="light"] .spec-table td { border-color: #e2e8f0; color: #475467; }
+[data-theme="light"] .spec-table tr:hover td { background: #f8fafc; color: #0f172a; }
+
+.theme-toggle-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255, 255, 255, 0.06); border: 1px solid var(--line);
+  padding: 6px 12px; border-radius: 999px; font-size: 11px; font-weight: 800;
+  color: var(--text-main); cursor: pointer; transition: all 0.2s ease;
+  font-family: var(--font-mono);
+}
+.theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.12); border-color: var(--cyan);
+}
+[data-theme="light"] .theme-toggle-btn {
+  background: #ffffff; border-color: #cbd5e1; color: #0f172a;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+[data-theme="light"] .theme-toggle-btn:hover {
+  background: #f1f5f9; border-color: #94a3b8;
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -415,8 +601,11 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
       <button class="tab-btn" onclick="switchTab('defense')">🛡️ Judge Defense</button>
     </div>
 
-    <!-- LIVE TELEMETRY PILL -->
+    <!-- LIVE TELEMETRY PILL & THEME TOGGLE -->
     <div class="system-status-pills">
+      <button class="theme-toggle-btn" id="btn-theme-toggle" onclick="toggleTheme()" title="Toggle White / Dark Theme">
+        <span id="theme-icon">☀️ White Theme</span>
+      </button>
       <div class="pill-live"><span class="pill-dot"></span> QDRANT EDGE v0.8.0 ACTIVE</div>
     </div>
   </div>
@@ -1121,7 +1310,32 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
       fetchStatus();
     }
 
-    // Initialize
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('rosetta_theme', next);
+      updateThemeButton(next);
+    }
+
+    function updateThemeButton(theme) {
+      const icon = document.getElementById('theme-icon');
+      if (icon) {
+        icon.innerText = theme === 'light' ? '🌙 Dark Theme' : '☀️ White Theme';
+      }
+      const gaugeBg = document.querySelector('.gauge-svg-wrap path:first-child');
+      if (gaugeBg) {
+        gaugeBg.setAttribute('stroke', theme === 'light' ? '#e2e8f0' : '#1e293b');
+      }
+    }
+
+    // Initialize Theme
+    const savedTheme = localStorage.getItem('rosetta_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeButton(savedTheme);
+
+    // Initialize Telemetry
     fetchStatus();
 </script>
 </body>
