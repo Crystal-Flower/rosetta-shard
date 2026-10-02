@@ -245,14 +245,7 @@
   background: #f1f5f9; border-color: #e2e8f0;
 }
 
-[data-theme="light"] .comp-naive {
-  background: #fff1f2; border-color: #fecdd3;
-}
-[data-theme="light"] .comp-rosetta {
-  background: #ecfdf3; border-color: #a7f3d0;
-}
-[data-theme="light"] .comp-body { color: #475467; }
-[data-theme="light"] .comp-body strong { color: #0f172a; }
+
 
 [data-theme="light"] .qna-q { color: #0f172a; }
 [data-theme="light"] .spec-table th { color: #0284c7; border-color: #e2e8f0; }
@@ -586,36 +579,7 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
   100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); border-color: var(--line); }
 }
 
-/* SIDE-BY-SIDE FAILURE COMPARISON BOX */
-.comparison-card {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; animation: slideDown 0.3s ease;
-}
-@keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 
-.comp-box {
-  border-radius: var(--radius); padding: 18px 20px;
-  display: flex; flex-direction: column; gap: 10px;
-}
-.comp-naive {
-  background: linear-gradient(135deg, rgba(244, 63, 94, 0.08), rgba(15, 23, 42, 0.8));
-  border: 1px solid rgba(244, 63, 94, 0.35); box-shadow: 0 0 25px var(--rose-glow);
-}
-.comp-rosetta {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(15, 23, 42, 0.8));
-  border: 1px solid rgba(16, 185, 129, 0.35); box-shadow: 0 0 25px var(--emerald-glow);
-}
-.comp-header { display: flex; align-items: center; justify-content: space-between; }
-.comp-title { font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
-.comp-naive .comp-title { color: var(--rose); }
-.comp-rosetta .comp-title { color: var(--emerald); }
-.comp-badge {
-  font-size: 10px; font-weight: 800; font-family: var(--font-mono);
-  padding: 4px 8px; border-radius: 6px; text-transform: uppercase;
-}
-.comp-naive .comp-badge { background: rgba(244, 63, 94, 0.2); color: #fecdd3; border: 1px solid rgba(244, 63, 94, 0.4); }
-.comp-rosetta .comp-badge { background: rgba(16, 185, 129, 0.2); color: #a7f3d0; border: 1px solid rgba(16, 185, 129, 0.4); }
-.comp-body { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
-.comp-body strong { color: #fff; }
 
 /* DUAL COCKPIT GRID */
 .cockpit-grid {
@@ -806,7 +770,6 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
 @media (max-width: 640px) {
   .stages-track { grid-template-columns: 1fr; }
   .ledger-banner { grid-template-columns: 1fr; }
-  .comparison-card { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -939,27 +902,7 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
       </div>
     </div>
 
-    <!-- SIDE-BY-SIDE FAILURE COMPARISON BOX -->
-    <div class="comparison-card" id="comparison-box" style="display:none;">
-      <div class="comp-box comp-naive">
-        <div class="comp-header">
-          <div class="comp-title">⚠️ Standard Vector DB (Naive System)</div>
-          <span class="comp-badge">SILENT SEMANTIC FAILURE</span>
-        </div>
-        <div class="comp-body" id="comp-std-desc">
-          Executes search across mismatched vector spaces with <strong>200 OK</strong>! Returns irrelevant documentation with a deceptive <strong>0.824 cosine score</strong>. Downstream autonomous agents make high-stakes errors because no database exception was raised.
-        </div>
-      </div>
-      <div class="comp-box comp-rosetta">
-        <div class="comp-header">
-          <div class="comp-title">🛡️ Rosetta Shard (Qdrant Edge Protection)</div>
-          <span class="comp-badge">SPACE GUARD REFUSAL</span>
-        </div>
-        <div class="comp-body" id="comp-rs-desc">
-          Strictly validates coordinate space tags (<code style="color:var(--cyan)">bge-small@main/384/l2</code> vs <code style="color:var(--emerald)">bge-large@main/1024/l2</code>). Immediately halts query with <strong>SpaceMismatchError</strong>, immunizing the system from corrupted memory.
-        </div>
-      </div>
-    </div>
+
 
     <!-- DUAL COCKPIT GRID -->
     <div class="cockpit-grid">
@@ -1307,13 +1250,13 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
         badge: "STAGE 3 / 5",
         title: "▶ RUN STAGE 3: TRIGGER SILENT COLLAPSE TRAP",
         desc: "1-Click: Submits cross-space query to reveal Naive DB silent failure vs Space Guard refusal",
-        action: "<b>Space Guard Refusal Triggered:</b> Mismatched query attempted. Rosetta Shard halted execution immediately with <code>SpaceMismatchError</code>. Side-by-side comparison HUD revealed!",
+        action: "<b>Space Guard Refusal:</b> Mismatched coordinate space (<code style='color:var(--cyan)'>384-d</code> vs <code style='color:var(--emerald)'>1024-d</code>) rejected! Space Guard halted retrieval immediately with <code>SpaceMismatchError</code>, preventing silent corruption.",
         takeaway: "<b>Judge Pitch Takeaway:</b> Prevents silent semantic failure. Standard vector DBs return 200 OK with hallucinated 0.82 scores; Rosetta Shard provides 100% cryptographic space safety (E1 benchmark).",
         nextBtnTitle: "▶ ADVANCE TO STAGE 4: 80ms SHARD RESCUE ➔",
         nextBtnDesc: "Click to push 128KB math bundle & atomically migrate edge vectors in 80ms",
         dockStage: "STAGE 3/5: SILENT COLLAPSE",
         dockNext: "▶ RUN STAGE 4 ➔",
-        targetId: "comparison-box",
+        targetId: "edge-panel",
         highlightClass: "focus-highlight-rose"
       },
       4: {
@@ -1473,13 +1416,6 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
             '<div style="font-size:12px;color:var(--rose);padding:18px;border:1px solid rgba(244,63,94,0.3);border-radius:10px;background:rgba(244,63,94,0.05);">' +
             '<b>Space Guard Refusal:</b> Mismatched coordinate space rejected. Silent retrieval collapse prevented.</div>';
           document.getElementById('cert-box').style.display = 'none';
-
-          // Show side-by-side comparison of silent failure
-          document.getElementById('comparison-box').style.display = 'grid';
-          document.getElementById('comp-std-desc').innerHTML = 
-            'A standard vector DB runs this cross-space search with <b>200 OK</b>! It returns an unrelated doc (<i>"CAN Bus Error Handling"</i>) with a fake <b>0.824 cosine score</b>. Downstream drones or medics would act on corrupted memory without warning.';
-          document.getElementById('comp-rs-desc').innerHTML = 
-            'Space Guard detected query space (<code style="color:var(--cyan)">bge-small@main/384/l2</code>) vs target cloud space (<code style="color:var(--emerald)">bge-large@main/1024/l2</code>) and <b>blocked execution immediately</b>.';
         }
         return;
       }
@@ -1492,7 +1428,7 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
       const overlapPct = Math.round(data.certified_overlap * 100);
       document.getElementById('cert-overlap').innerText = overlapPct + '%';
       document.getElementById('cert-coverage').innerText = 'P(Overlap ≥ ' + overlapPct + '%) ≥ 90%';
-      document.getElementById('cert-ood').innerText = data.sim_anchor_max.toFixed(3) + (data.sim_anchor_max < 0.25 ? ' (⚠️ Covariate Shift)' : ' (In-Domain)');
+      document.getElementById('cert-ood').innerText = data.sim_anchor_max.toFixed(3) + (data.sim_anchor_max < 0.50 ? ' (⚠️ Covariate Shift)' : ' (In-Domain)');
       document.getElementById('cert-latency').innerText = data.latency_ms + ' ms';
 
       // Update Animated Semi-Circle Trust Gauge
@@ -1523,13 +1459,6 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
         }
       }
       document.getElementById('save-lat').innerText = data.latency_ms + ' ms';
-
-      // Comparison Box handling on verified search
-      if (data.standard_db_simulation && data.standard_db_simulation.status === 'VERIFIED_ACCURATE') {
-        document.getElementById('comparison-box').style.display = 'grid';
-        document.getElementById('comp-std-desc').innerHTML = 'Single-model search before cloud upgrade.';
-        document.getElementById('comp-rs-desc').innerHTML = data.standard_db_simulation.explanation;
-      }
 
       // Render Results
       const resultsDiv = document.getElementById('results-list');
@@ -1589,7 +1518,7 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
           document.getElementById('query-input').value = "Lithium battery thermal degradation rate";
           await submitQuery();
           updateTourUI(3);
-          triggerHighlight('comparison-box', 'focus-highlight-rose');
+          triggerHighlight('edge-panel', 'focus-highlight-rose');
           currentTourStep = 4;
         } else if (stepToRun === 4) {
           await pushAdapter();
@@ -1731,7 +1660,6 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
       document.getElementById('results-list').innerHTML = '<div style="font-size:12px;color:var(--text-dim);text-align:center;padding:24px;">Click "Search Shard" or advance through the pipeline to inspect results.</div>';
       document.getElementById('cert-box').style.display = 'none';
       document.getElementById('migration-box').style.display = 'none';
-      document.getElementById('comparison-box').style.display = 'none';
       document.getElementById('save-cpu').innerText = '134.7s';
       document.getElementById('save-net').innerText = '128.5 KB';
 
