@@ -62,7 +62,7 @@ class DeviceAgent:
             self.router = QueryRouter(
                 edge_store=self.edge_store,
                 certificate=cert,
-                cloud_store=self.cloud_store if not self.airplane_mode else None,
+                cloud_store=self.cloud_store,
                 network_available=not self.airplane_mode,
             )
 

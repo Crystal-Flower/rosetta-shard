@@ -17,6 +17,7 @@ from rosetta.device.agent import DeviceAgent
 from rosetta.embed import embed_texts
 from rosetta.router import RoutingDecision
 from rosetta.space import SpaceMismatchError
+from rosetta.store.numpy_store import NumPyStore
 
 app = FastAPI(title="Rosetta Shard Demo Server")
 
@@ -88,14 +89,21 @@ class DemoState:
             },
         ]
 
-        # Initialize device agent with small model
+        # Initialize simulated cloud store with large model
+        self.cloud_store = NumPyStore(
+            space_id=self.large_model.space_id,
+            dim=self.large_model.dim,
+        )
+
+        # Initialize device agent with small model and cloud store
         self.agent = DeviceAgent(
             shard_path=self.shard_path,
             model_name="bge-small-en-v1.5",
+            cloud_store=self.cloud_store,
             airplane_mode=False,
         )
 
-        # Upsert docs into EdgeStore
+        # Upsert docs into EdgeStore and CloudStore
         texts = [f"{d['title']} {d['text']}" for d in self.docs]
         doc_ids = [d["id"] for d in self.docs]
         payloads = [
@@ -108,6 +116,10 @@ class DemoState:
 
         # Precompute adapter bundle cloud-side
         self._prepare_cloud_bundle()
+
+        # Populate cloud store in 1024-d space using bundle projection
+        vecs_large = self.cloud_bundle.apply(vecs)
+        self.cloud_store.upsert(ids=doc_ids, vectors=vecs_large, payloads=payloads)
 
     def _prepare_cloud_bundle(self):
         # Anchor texts

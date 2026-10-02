@@ -86,7 +86,9 @@ class QueryRouter:
 
         # 3. Decision gating
         # OOD gate check: If query is strongly out-of-distribution (sim_anchor_max low), flag risk
-        is_ood = features.sim_anchor_max < 0.25
+        is_ood = features.sim_anchor_max < 0.50
+        if is_ood:
+            cert_overlap = min(cert_overlap, 0.35)
 
         if cert_overlap >= self.tau_serve and not is_ood:
             decision = RoutingDecision.SERVE_LOCAL

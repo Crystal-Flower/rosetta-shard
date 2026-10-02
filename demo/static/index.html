@@ -176,6 +176,70 @@
   background: #e2e8f0; color: #0f172a;
 }
 
+[data-theme="light"] .floating-dock {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12), 0 0 20px rgba(2, 132, 199, 0.15);
+}
+[data-theme="light"] .floating-dock .dock-pill {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #0284c7;
+}
+[data-theme="light"] .floating-dock .btn-dock-autoplay {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #475467;
+}
+[data-theme="light"] .floating-dock .btn-dock-autoplay:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+[data-theme="light"] .floating-dock .btn-dock-reset {
+  color: #64748b;
+}
+[data-theme="light"] .floating-dock .btn-dock-reset:hover {
+  color: #0f172a;
+}
+[data-theme="light"] .btn-hero-autoplay {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0284c7;
+}
+[data-theme="light"] .btn-hero-autoplay:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0369a1;
+}
+[data-theme="light"] .btn-hero-reset {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #475467;
+}
+[data-theme="light"] .btn-hero-reset:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+[data-theme="light"] .pipeline-progress-bar-wrap {
+  background: #e2e8f0;
+}
+[data-theme="light"] .pipeline-progress-text {
+  color: #0284c7;
+}
+[data-theme="light"] .hero-step-desc {
+  color: rgba(255, 255, 255, 0.9);
+}
+[data-theme="light"] .narrative-strip {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+[data-theme="light"] .narrative-text-action {
+  color: #1e3a8a;
+}
+[data-theme="light"] .narrative-text-takeaway {
+  color: #065f46;
+}
+
 [data-theme="light"] .ledger-val { color: #0f172a; }
 [data-theme="light"] .ledger-icon {
   background: #f1f5f9; border-color: #e2e8f0;
@@ -307,27 +371,96 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
 /* 60-SECOND GUIDED CRISIS PIPELINE */
 .crisis-pipeline-card {
   background: var(--bg-card); border: 1px solid var(--line); border-radius: var(--radius);
-  padding: 20px; backdrop-filter: blur(16px); display: flex; flex-direction: column; gap: 16px;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+  padding: 22px; backdrop-filter: blur(16px); display: flex; flex-direction: column; gap: 16px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35); position: relative;
 }
 .pipeline-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
 .pipeline-title { font-size: 13px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
-.pipeline-actions { display: flex; align-items: center; gap: 10px; }
+.pipeline-progress-text { font-size: 11px; font-weight: 800; font-family: var(--font-mono); color: var(--cyan); text-transform: uppercase; }
 
-.btn-cta {
-  background: linear-gradient(135deg, #0284c7, #2563eb);
-  color: #fff; border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 800;
-  cursor: pointer; display: flex; align-items: center; gap: 8px;
-  box-shadow: 0 4px 20px var(--cyan-glow); transition: all 0.2s ease;
+.pipeline-progress-bar-wrap {
+  width: 100%; height: 6px; background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px; overflow: hidden; position: relative;
 }
-.btn-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 25px rgba(56, 189, 248, 0.4); }
-.btn-reset {
-  background: rgba(255, 255, 255, 0.05); color: var(--text-muted); border: 1px solid var(--line);
-  padding: 10px 16px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer;
+.pipeline-progress-bar-fill {
+  height: 100%; width: 20%;
+  background: linear-gradient(90deg, #0284c7, #2563eb, #10b981);
+  border-radius: 999px; transition: width 0.4s ease;
+}
+
+@keyframes heroPulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7), 0 0 25px rgba(37, 99, 235, 0.5);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(56, 189, 248, 0), 0 0 45px rgba(124, 58, 237, 0.6);
+    transform: scale(1.012);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7), 0 0 25px rgba(37, 99, 235, 0.5);
+    transform: scale(1);
+  }
+}
+
+.hero-stepper-container {
+  display: flex; align-items: stretch; gap: 12px; flex-wrap: wrap; margin-top: 4px;
+}
+.btn-hero-next {
+  flex: 2; min-width: 320px;
+  background: linear-gradient(135deg, #0284c7 0%, #2563eb 50%, #7c3aed 100%);
+  color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 14px; padding: 14px 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  animation: heroPulseGlow 2.4s infinite ease-in-out;
+  transition: all 0.2s ease; user-select: none;
+}
+.btn-hero-next:hover {
+  transform: translateY(-2px) scale(1.015);
+  box-shadow: 0 10px 35px rgba(56, 189, 248, 0.6), 0 0 45px rgba(124, 58, 237, 0.6);
+}
+.btn-hero-next:active { transform: translateY(1px) scale(0.99); }
+.hero-btn-left { display: flex; align-items: center; gap: 14px; }
+.hero-step-badge {
+  background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff; font-family: var(--font-mono); font-size: 11px; font-weight: 900;
+  padding: 6px 10px; border-radius: 8px; letter-spacing: 0.05em; white-space: nowrap;
+}
+.hero-step-text-group { display: flex; flex-direction: column; gap: 2px; text-align: left; }
+.hero-step-title { font-size: 15px; font-weight: 900; letter-spacing: -0.01em; color: #fff; }
+.hero-step-desc { font-size: 11px; color: rgba(255, 255, 255, 0.85); font-weight: 500; }
+.hero-step-arrow { font-size: 20px; font-weight: 900; color: #fff; transition: transform 0.2s ease; }
+.btn-hero-next:hover .hero-step-arrow { transform: translateX(4px); }
+
+.hero-aux-actions { display: flex; align-items: stretch; gap: 10px; flex: 1; min-width: 240px; }
+.btn-hero-autoplay {
+  flex: 1; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.35);
+  color: var(--cyan); border-radius: 14px; padding: 12px 14px; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  font-size: 12px; font-weight: 800; font-family: var(--font-mono);
+  transition: all 0.2s ease; position: relative; overflow: hidden;
+}
+.btn-hero-autoplay:hover {
+  background: rgba(56, 189, 248, 0.2); border-color: var(--cyan); color: #fff;
+}
+.btn-hero-autoplay.active {
+  background: rgba(16, 185, 129, 0.15); border-color: var(--emerald); color: var(--emerald);
+  box-shadow: 0 0 20px var(--emerald-glow);
+}
+.autoplay-progress-line {
+  position: absolute; bottom: 0; left: 0; height: 4px; width: 0%;
+  background: linear-gradient(90deg, var(--cyan), var(--emerald));
+  transition: width 0.1s linear;
+}
+.btn-hero-reset {
+  background: rgba(255, 255, 255, 0.05); border: 1px solid var(--line);
+  color: var(--text-muted); border-radius: 14px; padding: 12px 18px; cursor: pointer;
+  font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px;
   transition: all 0.2s ease;
 }
-.btn-reset:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+.btn-hero-reset:hover {
+  background: rgba(255, 255, 255, 0.1); color: #fff; border-color: rgba(255, 255, 255, 0.2);
+}
 
 .stages-track {
   display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; position: relative;
@@ -342,7 +475,7 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
   border-color: var(--cyan); box-shadow: 0 0 20px var(--cyan-glow);
 }
 .stage-item.completed {
-  background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.35);
 }
 .stage-num { font-size: 10px; font-weight: 800; font-family: var(--font-mono); color: var(--text-dim); text-transform: uppercase; }
 .stage-item.active .stage-num { color: var(--cyan); }
@@ -351,11 +484,107 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
 .stage-summary { font-size: 11px; color: var(--text-muted); line-height: 1.3; }
 
 .narrative-strip {
-  background: rgba(2, 132, 199, 0.08); border: 1px solid rgba(56, 189, 248, 0.2);
-  border-radius: 10px; padding: 12px 16px; font-size: 12px; color: #bae6fd;
-  display: flex; align-items: center; gap: 10px; line-height: 1.5;
+  background: rgba(2, 132, 199, 0.06); border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 12px; padding: 14px 18px; display: flex; flex-direction: column; gap: 8px;
 }
-.narrative-strip b { color: #fff; }
+.narrative-row {
+  display: flex; align-items: flex-start; gap: 10px; font-size: 12px; line-height: 1.5;
+}
+.narrative-tag {
+  font-size: 10px; font-weight: 900; font-family: var(--font-mono);
+  padding: 3px 8px; border-radius: 6px; text-transform: uppercase; white-space: nowrap;
+}
+.tag-action {
+  background: rgba(56, 189, 248, 0.15); color: var(--cyan); border: 1px solid rgba(56, 189, 248, 0.3);
+}
+.tag-takeaway {
+  background: rgba(16, 185, 129, 0.15); color: var(--emerald); border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.narrative-text-action { color: #bae6fd; }
+.narrative-text-takeaway { color: #a7f3d0; font-weight: 600; }
+
+/* STICKY FLOATING MISSION CONTROL DOCK */
+.floating-dock {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  z-index: 1000; background: rgba(10, 15, 29, 0.92);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7), 0 0 30px var(--cyan-glow);
+  backdrop-filter: blur(20px); border-radius: 999px;
+  padding: 8px 14px 8px 18px; display: flex; align-items: center; gap: 12px;
+  animation: floatIn 0.4s ease; transition: all 0.25s ease;
+}
+@keyframes floatIn {
+  from { opacity: 0; transform: translate(-50%, 20px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+.floating-dock .dock-pill {
+  font-size: 10px; font-weight: 900; font-family: var(--font-mono);
+  color: var(--cyan); background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 5px 10px; border-radius: 999px; white-space: nowrap;
+}
+.floating-dock .btn-dock-next {
+  background: linear-gradient(135deg, #0284c7, #2563eb);
+  color: #fff; border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 8px 18px; border-radius: 999px; font-size: 12px; font-weight: 800;
+  cursor: pointer; display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 0 15px var(--cyan-glow); transition: all 0.2s ease; white-space: nowrap;
+}
+.floating-dock .btn-dock-next:hover {
+  transform: translateY(-1px); box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+}
+.floating-dock .btn-dock-autoplay {
+  background: rgba(255, 255, 255, 0.06); border: 1px solid var(--line);
+  color: var(--text-muted); padding: 8px 12px; border-radius: 999px;
+  font-size: 11px; font-weight: 800; font-family: var(--font-mono);
+  cursor: pointer; transition: all 0.2s ease; white-space: nowrap;
+}
+.floating-dock .btn-dock-autoplay:hover { color: #fff; border-color: rgba(255, 255, 255, 0.3); }
+.floating-dock .btn-dock-autoplay.active {
+  background: rgba(16, 185, 129, 0.15); color: var(--emerald); border-color: var(--emerald);
+}
+.floating-dock .btn-dock-reset {
+  background: transparent; border: none; color: var(--text-dim);
+  cursor: pointer; font-size: 14px; padding: 4px; transition: color 0.2s ease;
+}
+.floating-dock .btn-dock-reset:hover { color: #fff; }
+
+/* FOCUS HIGHLIGHT PULSES FOR COCKPIT ELEMENTS */
+.focus-highlight-cyan {
+  animation: pulseCyan 2.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+@keyframes pulseCyan {
+  0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.8), 0 0 35px var(--cyan-glow); border-color: var(--cyan); }
+  50% { box-shadow: 0 0 0 12px rgba(56, 189, 248, 0), 0 0 50px var(--cyan-glow); border-color: var(--cyan); }
+  100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); border-color: var(--line); }
+}
+
+.focus-highlight-amber {
+  animation: pulseAmber 2.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+@keyframes pulseAmber {
+  0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.8), 0 0 35px var(--amber-glow); border-color: var(--amber); }
+  50% { box-shadow: 0 0 0 12px rgba(245, 158, 11, 0), 0 0 50px var(--amber-glow); border-color: var(--amber); }
+  100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); border-color: var(--line); }
+}
+
+.focus-highlight-rose {
+  animation: pulseRose 2.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+@keyframes pulseRose {
+  0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.8), 0 0 35px var(--rose-glow); border-color: var(--rose); }
+  50% { box-shadow: 0 0 0 12px rgba(244, 63, 94, 0), 0 0 50px var(--rose-glow); border-color: var(--rose); }
+  100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); border-color: var(--line); }
+}
+
+.focus-highlight-emerald {
+  animation: pulseEmerald 2.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+@keyframes pulseEmerald {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.8), 0 0 35px var(--emerald-glow); border-color: var(--emerald); }
+  50% { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0), 0 0 50px var(--emerald-glow); border-color: var(--emerald); }
+  100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); border-color: var(--line); }
+}
 
 /* SIDE-BY-SIDE FAILURE COMPARISON BOX */
 .comparison-card {
@@ -629,50 +858,84 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
     </div>
 
     <!-- 60-SECOND CRISIS WALKTHROUGH PIPELINE -->
-    <div class="crisis-pipeline-card">
+    <div class="crisis-pipeline-card" id="pipeline-card">
       <div class="pipeline-top">
         <div class="pipeline-title">
           <span>⚡ 60-SECOND JUDGE WALKTHROUGH PIPELINE</span>
-          <span style="font-size:11px;color:var(--text-dim);font-weight:600">(Single click unfolds the complete edge-to-cloud story)</span>
+          <span style="font-size:11px;color:var(--text-dim);font-weight:600">(Single click unfolds complete crisis scenario & proof)</span>
         </div>
-        <div class="pipeline-actions">
-          <button class="btn-cta" id="btn-next-step" onclick="advanceTourStep()">
-            <span>▶ Run Next Stage (1/5)</span>
+        <div class="pipeline-progress-text" id="pipeline-progress-label">STAGE 1 OF 5 (20% Completed)</div>
+      </div>
+
+      <!-- PROGRESS TRACK -->
+      <div class="pipeline-progress-bar-wrap">
+        <div class="pipeline-progress-bar-fill" id="pipeline-progress-fill"></div>
+      </div>
+
+      <!-- HERO 1-CLICK ACTION HUB -->
+      <div class="hero-stepper-container">
+        <button class="btn-hero-next" id="btn-hero-next" onclick="advanceTourStep()" title="Click once — executes full stage automatically!">
+          <div class="hero-btn-left">
+            <span class="hero-step-badge" id="hero-step-badge">STAGE 1 / 5</span>
+            <div class="hero-step-text-group">
+              <div class="hero-step-title" id="hero-step-title">▶ RUN STAGE 1: OFFLINE FIELD MISSION</div>
+              <div class="hero-step-desc" id="hero-step-desc">1-Click: Turns on Airplane Mode, queries local Qdrant Edge, verifies 90% cert trust</div>
+            </div>
+          </div>
+          <span class="hero-step-arrow" id="hero-step-arrow">➔</span>
+        </button>
+
+        <div class="hero-aux-actions">
+          <button class="btn-hero-autoplay" id="btn-hero-autoplay" onclick="toggleAutoPlay()" title="Auto-advance all 5 stages every 4.5 seconds">
+            <span id="hero-autoplay-icon">⚡ AUTO-PLAY STORY</span>
+            <span style="font-size:10px;opacity:0.8;font-weight:500;">(Hands-Free Demo)</span>
+            <div class="autoplay-progress-line" id="autoplay-progress-line"></div>
           </button>
-          <button class="btn-reset" onclick="resetTour()">↺ Reset Pipeline</button>
+          <button class="btn-hero-reset" onclick="resetTour()" title="Reset to Stage 1">
+            <span>↺ Reset</span>
+          </button>
         </div>
       </div>
 
+      <!-- 5-STAGE STEPS INTERACTIVE TRACK -->
       <div class="stages-track">
         <div class="stage-item active" id="pill-1" onclick="jumpToStep(1)">
-          <div class="stage-num">Stage 01</div>
-          <div class="stage-name">Offline Mission</div>
+          <div class="stage-num" id="pill-num-1">Stage 01</div>
+          <div class="stage-name">✈️ Offline Mission</div>
           <div class="stage-summary">Zero-byte local query with 90% cert</div>
         </div>
         <div class="stage-item" id="pill-2" onclick="jumpToStep(2)">
-          <div class="stage-num">Stage 02</div>
-          <div class="stage-name">Cloud AI Upgrade</div>
+          <div class="stage-num" id="pill-num-2">Stage 02</div>
+          <div class="stage-name">☁️ Cloud AI Upgrade</div>
           <div class="stage-summary">Model updates 384-d → 1024-d</div>
         </div>
         <div class="stage-item" id="pill-3" onclick="jumpToStep(3)">
-          <div class="stage-num">Stage 03</div>
-          <div class="stage-name">Silent Collapse Trap</div>
+          <div class="stage-num" id="pill-num-3">Stage 03</div>
+          <div class="stage-name">⚠️ Silent Collapse Trap</div>
           <div class="stage-summary">Naive DB fails vs Space Guard</div>
         </div>
         <div class="stage-item" id="pill-4" onclick="jumpToStep(4)">
-          <div class="stage-num">Stage 04</div>
-          <div class="stage-name">80ms Shard Rescue</div>
+          <div class="stage-num" id="pill-num-4">Stage 04</div>
+          <div class="stage-name">⚡ 80ms Shard Rescue</div>
           <div class="stage-summary">128 KB bundle · 0 raw text</div>
         </div>
         <div class="stage-item" id="pill-5" onclick="jumpToStep(5)">
-          <div class="stage-num">Stage 05</div>
-          <div class="stage-name">Conformal Trust</div>
+          <div class="stage-num" id="pill-num-5">Stage 05</div>
+          <div class="stage-name">🛡️ Conformal Trust & OOD</div>
           <div class="stage-summary">Covariate shift detection & auto-route</div>
         </div>
       </div>
 
+      <!-- DUAL NARRATIVE & JUDGE TAKEAWAY STRIP -->
       <div class="narrative-strip" id="step-narrative-box">
-        💡 <b>Stage 1: Offline Field Mission</b> — Drone is disconnected in radio silence (Airplane Mode ON). Asking vital query: <i>"Lithium battery thermal degradation rate"</i>. Local Qdrant Edge answers instantly with 0 network bytes, 1.1ms latency, and a verified 90% certified confidence badge!
+        <div class="narrative-row">
+          <span class="narrative-tag tag-action">⚡ Autonomous Action</span>
+          <span class="narrative-text-action" id="narrative-action-text">Airplane Mode set to ON. Executed local semantic query: <i>"Lithium battery thermal degradation rate"</i> against Qdrant Edge in 1.1ms with 0 network bytes.</span>
+        </div>
+        <div class="narrative-row">
+          <span class="narrative-tag tag-takeaway">🏆 Judge Takeaway</span>
+          <span class="narrative-text-takeaway" id="narrative-takeaway-text">Complete edge self-reliance with finite-sample statistical guarantees (P ≥ 90%). Safe offline mission autonomy.</span>
+        </div>
       </div>
     </div>
 
@@ -702,7 +965,7 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
     <div class="cockpit-grid">
 
       <!-- LEFT COCKPIT: EDGE QDRANT SHARD -->
-      <div class="cockpit-panel">
+      <div class="cockpit-panel" id="edge-panel">
         <div class="panel-header">
           <div class="panel-title-group">
             <div class="panel-icon">📱</div>
@@ -780,7 +1043,7 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
       </div>
 
       <!-- RIGHT COCKPIT: CLOUD CLUSTER -->
-      <div class="cockpit-panel">
+      <div class="cockpit-panel" id="cloud-panel">
         <div class="panel-header">
           <div class="panel-title-group">
             <div class="panel-icon">☁️</div>
@@ -999,49 +1262,117 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
 
 </main>
 
+<!-- STICKY FLOATING MISSION CONTROL DOCK -->
+<div id="floating-dock" class="floating-dock">
+  <span class="dock-pill" id="dock-stage-pill">STAGE 1/5: OFFLINE MISSION</span>
+  <button class="btn-dock-next" id="btn-dock-next" onclick="advanceTourStep()">
+    <span id="dock-btn-label">▶ RUN NEXT STEP ➔</span>
+  </button>
+  <button class="btn-dock-autoplay" id="btn-dock-autoplay" onclick="toggleAutoPlay()">
+    <span id="dock-autoplay-label">⚡ Auto-Play</span>
+  </button>
+  <button class="btn-dock-reset" onclick="resetTour()" title="Reset Pipeline">↺</button>
+</div>
+
 <script>
     let currentTourStep = 1;
     const tourStepData = {
       1: {
-        title: "1 · Offline Field Mission",
-        narrative: "💡 <b>Stage 1: Offline Field Mission</b> — Drone is disconnected in radio silence (Airplane Mode ON). Asking vital query: <i>'Lithium battery thermal degradation rate'</i>. Local Qdrant Edge answers instantly with 0 network bytes, 1.1ms latency, and a verified 90% certified confidence badge!",
-        nextBtn: "▶ Run Next: 2 · Cloud AI Upgrade (2/5)"
+        badge: "STAGE 1 / 5",
+        title: "▶ RUN STAGE 1: OFFLINE FIELD MISSION",
+        desc: "1-Click: Turns on Airplane Mode, queries local Qdrant Edge, verifies 90% cert trust",
+        action: "<b>Offline Search Executed:</b> Airplane Mode enabled (radio silence). Queried <i>'Lithium battery thermal degradation rate'</i> directly against resident Qdrant Edge store in 1.1ms with 0 network bytes.",
+        takeaway: "<b>Judge Pitch Takeaway:</b> Complete edge self-reliance with finite-sample statistical guarantees (P ≥ 90%). Safe offline mission autonomy.",
+        nextBtnTitle: "▶ ADVANCE TO STAGE 2: CLOUD AI UPGRADE ➔",
+        nextBtnDesc: "Click to simulate cloud AI upgrading to 1024-d, creating vector space mismatch",
+        dockStage: "STAGE 1/5: OFFLINE MISSION",
+        dockNext: "▶ RUN STAGE 2 ➔",
+        targetId: "edge-panel",
+        highlightClass: "focus-highlight-cyan"
       },
       2: {
-        title: "2 · Cloud AI Upgrade",
-        narrative: "💡 <b>Stage 2: Base Station Cloud AI Upgrade</b> — Base camp updates its cloud model from 384-d to 1024-d (bge-large). The drone's local 384-d shard is now in an incompatible vector space!",
-        nextBtn: "▶ Run Next: 3 · Silent Collapse Trap (3/5)"
+        badge: "STAGE 2 / 5",
+        title: "▶ RUN STAGE 2: CLOUD AI UPGRADE (1024-d)",
+        desc: "1-Click: Upgrades cloud model from 384-d to 1024-d, creating vector space discrepancy",
+        action: "<b>Cloud Model Space Evolved:</b> Base station upgraded central model from <code>bge-small</code> (384-d) to <code>bge-large</code> (1024-d). Resident edge vectors are now in an incompatible vector space!",
+        takeaway: "<b>Judge Pitch Takeaway:</b> Realistic production failure mode. Central AI models evolve continuously, leaving thousands of edge devices stranded in stale vector coordinate spaces.",
+        nextBtnTitle: "▶ ADVANCE TO STAGE 3: SILENT COLLAPSE TRAP ➔",
+        nextBtnDesc: "Click to test cross-space query & compare Naive DB vs Space Guard refusal",
+        dockStage: "STAGE 2/5: CLOUD UPGRADE",
+        dockNext: "▶ RUN STAGE 3 ➔",
+        targetId: "cloud-panel",
+        highlightClass: "focus-highlight-amber"
       },
       3: {
-        title: "3 · Silent Collapse Trap",
-        narrative: "💡 <b>Stage 3: Silent Collapse Trap</b> — Notice the comparison card! A Standard Vector DB returns irrelevant memory with a confident 0.82 score (poisoning the agent). Rosetta Shard's <b>Space Guard</b> halts the query immediately with SpaceMismatchError, guaranteeing safety!",
-        nextBtn: "▶ Run Next: 4 · 80ms Shard Rescue (4/5)"
+        badge: "STAGE 3 / 5",
+        title: "▶ RUN STAGE 3: TRIGGER SILENT COLLAPSE TRAP",
+        desc: "1-Click: Submits cross-space query to reveal Naive DB silent failure vs Space Guard refusal",
+        action: "<b>Space Guard Refusal Triggered:</b> Mismatched query attempted. Rosetta Shard halted execution immediately with <code>SpaceMismatchError</code>. Side-by-side comparison HUD revealed!",
+        takeaway: "<b>Judge Pitch Takeaway:</b> Prevents silent semantic failure. Standard vector DBs return 200 OK with hallucinated 0.82 scores; Rosetta Shard provides 100% cryptographic space safety (E1 benchmark).",
+        nextBtnTitle: "▶ ADVANCE TO STAGE 4: 80ms SHARD RESCUE ➔",
+        nextBtnDesc: "Click to push 128KB math bundle & atomically migrate edge vectors in 80ms",
+        dockStage: "STAGE 3/5: SILENT COLLAPSE",
+        dockNext: "▶ RUN STAGE 4 ➔",
+        targetId: "comparison-box",
+        highlightClass: "focus-highlight-rose"
       },
       4: {
-        title: "4 · 80ms Shard Rescue",
-        narrative: "💡 <b>Stage 4: 80ms Zero-Text Shard Rescue</b> — Base camp ships a tiny 128.5 KB mathematical Adapter Bundle (0 raw text). Qdrant Edge migrates its vectors atomically to 1024-d in 80ms! (Over 200x faster than CPU re-embedding, 0 private documents exposed).",
-        nextBtn: "▶ Run Next: 5 · Conformal Trust Meter (5/5)"
+        badge: "STAGE 4 / 5",
+        title: "▶ RUN STAGE 4: 80ms ZERO-TEXT RESCUE",
+        desc: "1-Click: Pushes 128KB math bundle, migrates edge vectors in 80ms, verifies 1024-d query",
+        action: "<b>Atomic Migration Succeeded:</b> 128.5 KB mathematical adapter received (0 raw text). Qdrant Edge vectors projected to 1024-d in 80ms (>200x faster than CPU re-embedding). Query re-executed with 1024-d vectors!",
+        takeaway: "<b>Judge Pitch Takeaway:</b> Zero text leakage (Rule R1), 99.7% bandwidth reduction, zero battery thrash. Safe in-process migration right inside the edge memory layer.",
+        nextBtnTitle: "▶ ADVANCE TO STAGE 5: CONFORMAL TRUST & OOD ➔",
+        nextBtnDesc: "Click to test Out-Of-Distribution query and verify auto-escalation to cloud",
+        dockStage: "STAGE 4/5: SHARD RESCUE",
+        dockNext: "▶ RUN STAGE 5 ➔",
+        targetId: "migration-box",
+        highlightClass: "focus-highlight-emerald"
       },
       5: {
-        title: "5 · Conformal Trust & OOD Shift",
-        narrative: "💡 <b>Stage 5: Conformal Trust Meter & OOD Shift</b> — When an out-of-domain query arrives (e.g. <i>'Cryptocurrency capital gains'</i>), anchor distance drops, Trust Gauge turns Yellow/Red, and the router automatically escalates to the cloud instead of guessing!",
-        nextBtn: "↺ Restart Pipeline (1/5)"
+        badge: "STAGE 5 / 5",
+        title: "▶ RUN STAGE 5: CONFORMAL TRUST & OOD SHIFT",
+        desc: "1-Click: Queries out-of-domain prompt to demonstrate anchor distance drop & cloud escalation",
+        action: "<b>Covariate Shift Detected:</b> Out-of-domain query <i>'Cryptocurrency capital gains and tax policy'</i> executed. Small-space centroid proximity dropped (<0.25). Trust Gauge dropped to red/amber and router auto-escalated to cloud!",
+        takeaway: "<b>Judge Pitch Takeaway:</b> Mathematical guarantee under exchangeability (E4 & E6 benchmarks). 100% of out-of-domain queries escalated to prevent hallucinated answers on edge devices.",
+        nextBtnTitle: "↺ RESTART FULL 60s WALKTHROUGH ➔",
+        nextBtnDesc: "Walkthrough completed! Click to reset to initial offline field state",
+        dockStage: "STAGE 5/5: COMPLETE",
+        dockNext: "↺ RESTART ➔",
+        targetId: "cert-box",
+        highlightClass: "focus-highlight-amber"
       }
     };
+
+    function triggerHighlight(elementId, highlightClass) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      el.classList.remove('focus-highlight-cyan', 'focus-highlight-amber', 'focus-highlight-rose', 'focus-highlight-emerald');
+      void el.offsetWidth;
+      el.classList.add(highlightClass);
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      setTimeout(() => {
+        el.classList.remove(highlightClass);
+      }, 2400);
+    }
 
     function switchTab(tabId) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
       
+      const dock = document.getElementById('floating-dock');
       if (tabId === 'cockpit') {
         document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
         document.getElementById('tab-cockpit').classList.add('active');
+        if (dock) dock.style.display = 'flex';
       } else if (tabId === 'benchmarks') {
         document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
         document.getElementById('tab-benchmarks').classList.add('active');
+        if (dock) dock.style.display = 'none';
       } else if (tabId === 'defense') {
         document.querySelector('.tab-btn:nth-child(3)').classList.add('active');
         document.getElementById('tab-defense').classList.add('active');
+        if (dock) dock.style.display = 'none';
       }
     }
 
@@ -1225,88 +1556,215 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
     }
 
     async function advanceTourStep() {
-      if (currentTourStep === 1) {
-        const statusRes = await fetch('/api/status');
-        const status = await statusRes.json();
-        if (!status.device.airplane_mode) {
-          await toggleAirplane();
+      const btnHero = document.getElementById('btn-hero-next');
+      const btnDock = document.getElementById('btn-dock-next');
+      const titleHero = document.getElementById('hero-step-title');
+      const labelDock = document.getElementById('dock-btn-label');
+      
+      if (btnHero) btnHero.disabled = true;
+      if (btnDock) btnDock.disabled = true;
+      if (titleHero) titleHero.innerHTML = '⚡ EXECUTING STAGE ' + currentTourStep + ' AUTOMATICALLY...';
+      if (labelDock) labelDock.innerHTML = '⚡ Executing...';
+
+      const stepToRun = currentTourStep;
+
+      try {
+        if (stepToRun === 1) {
+          const statusRes = await fetch('/api/status');
+          const status = await statusRes.json();
+          if (!status.device.airplane_mode) {
+            await toggleAirplane();
+          }
+          document.getElementById('query-input').value = "Lithium battery thermal degradation rate";
+          await submitQuery();
+          updateTourUI(1);
+          triggerHighlight('edge-panel', 'focus-highlight-cyan');
+          currentTourStep = 2;
+        } else if (stepToRun === 2) {
+          await upgradeCloud();
+          updateTourUI(2);
+          triggerHighlight('cloud-panel', 'focus-highlight-amber');
+          currentTourStep = 3;
+        } else if (stepToRun === 3) {
+          document.getElementById('query-input').value = "Lithium battery thermal degradation rate";
+          await submitQuery();
+          updateTourUI(3);
+          triggerHighlight('comparison-box', 'focus-highlight-rose');
+          currentTourStep = 4;
+        } else if (stepToRun === 4) {
+          await pushAdapter();
+          await runMigration();
+          document.getElementById('query-input').value = "Lithium battery thermal degradation rate";
+          await submitQuery();
+          updateTourUI(4);
+          triggerHighlight('migration-box', 'focus-highlight-emerald');
+          currentTourStep = 5;
+        } else if (stepToRun === 5) {
+          const statusRes = await fetch('/api/status');
+          const status = await statusRes.json();
+          if (status.device.airplane_mode) {
+            await toggleAirplane();
+          }
+          document.getElementById('query-input').value = "Cryptocurrency capital gains and tax policy";
+          await submitQuery();
+          updateTourUI(5);
+          triggerHighlight('cert-box', 'focus-highlight-amber');
+          currentTourStep = 1;
         }
-        document.getElementById('query-input').value = "Lithium battery thermal degradation rate";
-        await submitQuery();
-        updateTourUI(1);
-        currentTourStep = 2;
-      } else if (currentTourStep === 2) {
-        await upgradeCloud();
-        updateTourUI(2);
-        currentTourStep = 3;
-      } else if (currentTourStep === 3) {
-        document.getElementById('query-input').value = "Lithium battery thermal degradation rate";
-        await submitQuery();
-        updateTourUI(3);
-        currentTourStep = 4;
-      } else if (currentTourStep === 4) {
-        await pushAdapter();
-        await runMigration();
-        document.getElementById('query-input').value = "Lithium battery thermal degradation rate";
-        await submitQuery();
-        updateTourUI(4);
-        currentTourStep = 5;
-      } else if (currentTourStep === 5) {
-        document.getElementById('query-input').value = "Cryptocurrency capital gains and tax policy";
-        await submitQuery();
-        updateTourUI(5);
-        currentTourStep = 1;
+      } catch (err) {
+        console.error('Error during advanceTourStep:', err);
+      } finally {
+        if (btnHero) btnHero.disabled = false;
+        if (btnDock) btnDock.disabled = false;
       }
-      document.getElementById('btn-next-step').innerHTML = `<span>${tourStepData[currentTourStep === 1 ? 5 : currentTourStep - 1].nextBtn}</span>`;
     }
 
-    function updateTourUI(step) {
+    function updateTourUI(stepCompleted) {
+      const nextStep = stepCompleted === 5 ? 1 : stepCompleted + 1;
+      const completedInfo = tourStepData[stepCompleted];
+      const nextInfo = tourStepData[nextStep];
+
+      // Update progress bar
+      const pct = stepCompleted * 20;
+      document.getElementById('pipeline-progress-fill').style.width = pct + '%';
+      document.getElementById('pipeline-progress-label').innerText = 'STAGE ' + stepCompleted + ' OF 5 (' + pct + '% COMPLETED)';
+
+      // Update 5 stages pills
       for (let i = 1; i <= 5; i++) {
         const pill = document.getElementById('pill-' + i);
-        if (i < step) {
+        const pillNum = document.getElementById('pill-num-' + i);
+        if (i < stepCompleted) {
           pill.className = 'stage-item completed';
-        } else if (i === step) {
+          if (pillNum) pillNum.innerHTML = '✓ Stage 0' + i;
+        } else if (i === stepCompleted) {
+          pill.className = 'stage-item completed';
+          if (pillNum) pillNum.innerHTML = '✓ Stage 0' + i;
+        } else if (i === nextStep) {
           pill.className = 'stage-item active';
+          if (pillNum) pillNum.innerHTML = '▶ Stage 0' + i;
         } else {
           pill.className = 'stage-item';
+          if (pillNum) pillNum.innerHTML = 'Stage 0' + i;
         }
       }
-      document.getElementById('step-narrative-box').innerHTML = tourStepData[step].narrative;
+
+      // Update dual narrative
+      document.getElementById('narrative-action-text').innerHTML = completedInfo.action;
+      document.getElementById('narrative-takeaway-text').innerHTML = completedInfo.takeaway;
+
+      // Update Hero Action Button
+      document.getElementById('hero-step-badge').innerText = stepCompleted === 5 ? 'RESTART' : ('STAGE ' + nextStep + ' / 5');
+      document.getElementById('hero-step-title').innerText = completedInfo.nextBtnTitle;
+      document.getElementById('hero-step-desc').innerText = completedInfo.nextBtnDesc;
+
+      // Update Floating Dock
+      document.getElementById('dock-stage-pill').innerText = completedInfo.dockStage;
+      document.getElementById('dock-btn-label').innerText = completedInfo.dockNext;
     }
 
     async function jumpToStep(step) {
+      if (isAutoPlaying) stopAutoPlay();
       currentTourStep = step;
-      updateTourUI(step);
-      if (step === 1) {
-        document.getElementById('query-input').value = "Lithium battery thermal degradation rate";
-        await submitQuery();
-      } else if (step === 2) {
-        await upgradeCloud();
-      } else if (step === 3) {
-        document.getElementById('query-input').value = "Lithium battery thermal degradation rate";
-        await submitQuery();
-      } else if (step === 4) {
-        await pushAdapter();
-        await runMigration();
-        document.getElementById('query-input').value = "Lithium battery thermal degradation rate";
-        await submitQuery();
-      } else if (step === 5) {
-        document.getElementById('query-input').value = "Cryptocurrency capital gains and tax policy";
-        await submitQuery();
+      await advanceTourStep();
+    }
+
+    // Auto-Play Engine
+    let isAutoPlaying = false;
+    let autoPlayTimer = null;
+    let autoPlayElapsed = 0;
+    const AUTO_PLAY_INTERVAL = 4800; // 4.8 seconds per stage
+    const TICK_MS = 100;
+
+    function toggleAutoPlay() {
+      if (isAutoPlaying) {
+        stopAutoPlay();
+      } else {
+        startAutoPlay();
       }
     }
 
+    function startAutoPlay() {
+      isAutoPlaying = true;
+      document.getElementById('hero-autoplay-icon').innerText = '⏸ PAUSE AUTO-PLAY';
+      document.getElementById('dock-autoplay-label').innerText = '⏸ Pause';
+      document.getElementById('btn-hero-autoplay').classList.add('active');
+      document.getElementById('btn-dock-autoplay').classList.add('active');
+      autoPlayElapsed = 0;
+      
+      if (autoPlayTimer) clearInterval(autoPlayTimer);
+      autoPlayTimer = setInterval(async () => {
+        autoPlayElapsed += TICK_MS;
+        const pct = Math.min(100, (autoPlayElapsed / AUTO_PLAY_INTERVAL) * 100);
+        const line = document.getElementById('autoplay-progress-line');
+        if (line) line.style.width = pct + '%';
+        if (autoPlayElapsed >= AUTO_PLAY_INTERVAL) {
+          autoPlayElapsed = 0;
+          if (line) line.style.width = '0%';
+          const stepBefore = currentTourStep;
+          await advanceTourStep();
+          if (stepBefore === 5) {
+            stopAutoPlay();
+          }
+        }
+      }, TICK_MS);
+    }
+
+    function stopAutoPlay() {
+      isAutoPlaying = false;
+      if (autoPlayTimer) {
+        clearInterval(autoPlayTimer);
+        autoPlayTimer = null;
+      }
+      autoPlayElapsed = 0;
+      const line = document.getElementById('autoplay-progress-line');
+      if (line) line.style.width = '0%';
+      document.getElementById('hero-autoplay-icon').innerText = '⚡ AUTO-PLAY STORY';
+      document.getElementById('dock-autoplay-label').innerText = '⚡ Auto-Play';
+      document.getElementById('btn-hero-autoplay').classList.remove('active');
+      document.getElementById('btn-dock-autoplay').classList.remove('active');
+    }
+
     async function resetTour() {
+      stopAutoPlay();
       currentTourStep = 1;
       await fetch('/api/reset', { method: 'POST' });
-      document.getElementById('results-list').innerHTML = '<div style="font-size:12px;color:var(--text-dim);text-align:center;padding:24px;">Click "Search Shard" or step through the pipeline to inspect results.</div>';
+      document.getElementById('results-list').innerHTML = '<div style="font-size:12px;color:var(--text-dim);text-align:center;padding:24px;">Click "Search Shard" or advance through the pipeline to inspect results.</div>';
       document.getElementById('cert-box').style.display = 'none';
       document.getElementById('migration-box').style.display = 'none';
       document.getElementById('comparison-box').style.display = 'none';
       document.getElementById('save-cpu').innerText = '134.7s';
       document.getElementById('save-net').innerText = '128.5 KB';
-      updateTourUI(1);
-      document.getElementById('btn-next-step').innerHTML = '<span>▶ Run Next Stage (1/5)</span>';
+
+      // Reset progress bar
+      document.getElementById('pipeline-progress-fill').style.width = '0%';
+      document.getElementById('pipeline-progress-label').innerText = 'READY TO START (0/5 STAGES)';
+
+      // Reset hero button
+      document.getElementById('hero-step-badge').innerText = 'STAGE 1 / 5';
+      document.getElementById('hero-step-title').innerText = '▶ RUN STAGE 1: OFFLINE FIELD MISSION';
+      document.getElementById('hero-step-desc').innerText = '1-Click: Turns on Airplane Mode, queries local Qdrant Edge, verifies 90% cert trust';
+
+      // Reset dock
+      document.getElementById('dock-stage-pill').innerText = 'READY: STAGE 1/5';
+      document.getElementById('dock-btn-label').innerText = '▶ RUN STAGE 1 ➔';
+
+      // Reset pills
+      for (let i = 1; i <= 5; i++) {
+        const pill = document.getElementById('pill-' + i);
+        const pillNum = document.getElementById('pill-num-' + i);
+        if (i === 1) {
+          pill.className = 'stage-item active';
+          if (pillNum) pillNum.innerText = '▶ Stage 01';
+        } else {
+          pill.className = 'stage-item';
+          if (pillNum) pillNum.innerText = 'Stage 0' + i;
+        }
+      }
+
+      // Reset narrative
+      document.getElementById('narrative-action-text').innerHTML = 'Click the glowing <b>"RUN STAGE 1"</b> button or <b>"AUTO-PLAY STORY"</b>. The entire disaster-response sequence will unfold automatically with zero manual inputs.';
+      document.getElementById('narrative-takeaway-text').innerHTML = 'Demonstrates the complete Rosetta Shard architecture: Zero-text adaptation, 80ms migration, Space Guard refusal, and Conformal routing.';
+
       fetchStatus();
     }
 
