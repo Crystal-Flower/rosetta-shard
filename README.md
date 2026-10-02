@@ -172,6 +172,7 @@ rosetta-shard/
 - **[PREREG.md](docs/PREREG.md):** Frozen benchmark evaluation protocol and hypothesis bars.
 - **[VERIFIED.md](docs/VERIFIED.md):** Day-0 empirical confirmation of Qdrant Edge APIs and multi-vector capabilities.
 - **[LIMITATIONS.md](docs/LIMITATIONS.md):** Stated limitations regarding marginal coverage, distribution shift, and private vectors.
+- **[PRESENTATION.md](docs/PRESENTATION.md):** Complete hackathon judge pitch deck, slide layouts, speaker notes, and Q&A defense.
 - **[DEMO_SCRIPT.md](demo/DEMO_SCRIPT.md):** Rehearsed 60-second live stage walkthrough script.
 
 ---
