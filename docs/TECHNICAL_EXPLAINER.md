@@ -73,7 +73,7 @@ Rosetta Shard bridges the gap between cloud and edge without raw text or heavy c
 
 - **The Problem:** Standard databases do not know which model produced a vector.
 - **The Solution:** Space Guard tags every vector collection and query with an explicit coordinate space identifier:
-  $$\text{Space ID} = \langle \text{model\_name} \rangle @ \langle \text{revision} \rangle / \langle \text{dimension} \rangle / \langle \text{distance\_metric} \rangle$$
+  `SpaceID = "<model_name>@<revision>/<dimension>/<distance_metric>"`
   *(e.g., `bge-small@main/384/l2` vs `bge-large@main/1024/l2`)*.
 - **How it works:** If a query's Space ID does not match the target index, Space Guard immediately intercepts the search and halts execution with a `SpaceMismatchError`.
 - **Impact:** Eliminates **100% of silent cross-space failures** before corrupted data can reach an autonomous agent.
@@ -84,7 +84,7 @@ Rosetta Shard bridges the gap between cloud and edge without raw text or heavy c
 *A mathematical dictionary connecting two AI models.*
 
 - **The Problem:** Edge devices cannot re-embed their documents using the large model.
-- **The Solution:** The cloud trains a closed-form linear mapping $W \in \mathbb{R}^{d_{small} \times d_{large}}$ using **100 generic public anchor sentences**:
+- **The Solution:** The cloud trains a closed-form linear mapping $W \in \mathbb{R}^{d_{\mathrm{small}} \times d_{\mathrm{large}}}$ using **100 generic public anchor sentences**:
   $$W = (X^T X + \lambda I)^{-1} X^T Y$$
   Where:
   - $X$ is the public anchors embedded with the small edge model ($100 \times 384$).
@@ -102,7 +102,7 @@ Rosetta Shard bridges the gap between cloud and edge without raw text or heavy c
 
 - **The Problem:** Running neural network inference across thousands of local vectors locks edge CPUs, drains battery, and risks data corruption if interrupted.
 - **The Solution:** Instead of re-embedding, Rosetta Shard applies the linear adapter directly to the stored vector coordinates inside Qdrant Edge:
-  $$\hat{v}_{new} = \frac{v_{old} \cdot W}{\|v_{old} \cdot W\|_2}$$
+  $$\hat{v}_{\mathrm{new}} = \frac{v_{\mathrm{old}} \cdot W}{\|v_{\mathrm{old}} \cdot W\|_2}$$
 - **How it works:** 
   - Streams vectors in batches from the existing Qdrant Edge shard.
   - Multiplies each vector by $W$ via optimized BLAS matrix math.
@@ -121,11 +121,11 @@ Rosetta Shard bridges the gap between cloud and edge without raw text or heavy c
 - **The Solution:** Rosetta Shard uses **Split Conformal Prediction** to issue distribution-free statistical guarantees on retrieval overlap.
 - **How it works:**
   1. The cloud evaluates the adapter on a held-out calibration set and computes non-conformity residuals:
-     $$r_i = 1 - \text{Overlap@}k(q_i)$$
+     $$r_i = 1 - \mathrm{Overlap}_k(q_i)$$
   2. For a user-selected significance level $\alpha$ (e.g., $\alpha = 0.05$ for 95% confidence), it computes the empirical quantile $\hat{q}_\alpha$:
      $$\hat{q}_\alpha = \text{Quantile}\left(\frac{\lceil (n+1)(1-\alpha) \rceil}{n}, \{r_1, \dots, r_n\}\right)$$
   3. At runtime, the edge device extracts lightweight query features (margin gap between top-1 and top-$k$, anchor cosine similarity) and calculates the certified lower bound:
-     $$\mathbb{P}(\text{Overlap@}k \ge \tau) \ge 1 - \alpha$$
+     $$\mathbb{P}(\mathrm{Overlap}_k \ge \tau) \ge 1 - \alpha$$
 - **Impact:** The autonomous system acts only when mathematically guaranteed ($P \ge 95\%$). If a query is out-of-distribution or uncertain, it safely escalates to cloud fallback instead of hallucinating.
 
 ---

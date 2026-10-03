@@ -102,11 +102,11 @@ Three critical bottlenecks illustrated side-by-side:
 - **The Guarantee:**
   $$\mathbb{P}\left(\text{True Overlap@10} \ge \text{Certified Overlap}\right) \ge 1 - \alpha$$
 - **On-Device Feature Extractor (No Large Model Required):**
-  - $sim\_anchor\_max$: Cosine proximity to small-space anchor centroids (Covariate shift / OOD detection).
-  - $margin\_1\_10$ & $margin\_1\_2$: Retrieval confidence score gaps between top hits in local shard.
-  - $local\_fit\_err$: Interpolated adapter residual of nearest anchor centroids.
+  - `sim_anchor_max`: Cosine proximity to small-space anchor centroids (Covariate shift / OOD detection).
+  - `margin_1_10` & `margin_1_2`: Retrieval confidence score gaps between top hits in local shard.
+  - `local_fit_err`: Interpolated adapter residual of nearest anchor centroids.
 - **Split Conformal Calibration:**
-  - Nonconformity scores $s_i = \ell_i - \hat{h}(f_i)$ on held-out calibration split $Q_{cal}$.
+  - Nonconformity scores $s_i = \ell_i - \hat{h}(f_i)$ on held-out calibration split $Q_{\mathrm{cal}}$.
   - Finite-sample quantile $\hat{q}_\alpha$ guarantees coverage bounds.
 
 > [!NOTE]
@@ -260,7 +260,7 @@ graph TD
 ### Q2: "What if the query undergoes strong distribution shift (e.g., medical query on general model)?"
 > **Judge Persona:** Reliability / Production Engineer  
 > **Bulletproof Answer:**  
-> "Conformal guarantees assume exchangeability. We explicitly addressed this failure mode in `docs/LIMITATIONS.md` and measured it in `bench/exp_shift.py`. When covariate shift occurs, the query's cosine similarity to our anchor centroids ($sim\_anchor\_max$) drops below 0.25. The router flags the query as out-of-distribution and **escalates 100% of shifted queries to the cloud**, completely bypassing unreliable local predictions."
+> "Conformal guarantees assume exchangeability. We explicitly addressed this failure mode in `docs/LIMITATIONS.md` and measured it in `bench/exp_shift.py`. When covariate shift occurs, the query's cosine similarity to our anchor centroids (`sim_anchor_max`) drops below 0.25. The router flags the query as out-of-distribution and **escalates 100% of shifted queries to the cloud**, completely bypassing unreliable local predictions."
 
 ### Q3: "Does the Adapter Bundle leak private training documents?"
 > **Judge Persona:** Privacy & Security Specialist  

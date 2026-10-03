@@ -24,9 +24,9 @@
 | **E1** | Collapse Demonstration | Overlap@10 (S1 unadapted) | Overlap@10 collapses to $< 0.05$ under silent model swap |
 | **E2** | Adapter Ablation | Overlap@10, Recall@10, nDCG@10 | Ridge / Procrustes recovers $\ge 70\%$ of the gap to native ceiling |
 | **E3** | Anchor Sample Efficiency | Overlap@10 vs Anchor Count | Plateau begins around 500-1000 anchors; $>60\%$ recovery with only 200 anchors |
-| **E4** | Conformal Calibration | Empirical Coverage at $\alpha \in \{0.05, 0.10, 0.20\}$ | Empirical coverage $\ge (1 - \alpha) - 2\sigma$ on held-out $Q_{test}$ |
-| **E5** | Risk-Coverage Tradeoff | Local Serve % vs Mean Overlap | Gating with $\tau_{serve}$ systematically removes low-overlap queries |
-| **E6** | Distribution Shift Analysis | Empirical Coverage & OOD Detection | Shift degrades raw coverage, but $sim\_anchor\_max$ triggers escalation |
+| **E4** | Conformal Calibration | Empirical Coverage at $\alpha \in \{0.05, 0.10, 0.20\}$ | Empirical coverage $\ge (1 - \alpha) - 2\sigma$ on held-out $Q_{\mathrm{test}}$ |
+| **E5** | Risk-Coverage Tradeoff | Local Serve % vs Mean Overlap | Gating with $\tau_{\mathrm{serve}}$ systematically removes low-overlap queries |
+| **E6** | Distribution Shift Analysis | Empirical Coverage & OOD Detection | Shift degrades raw coverage, but `sim_anchor_max` triggers escalation |
 | **E7** | Hot-Set Repair Efficiency | Overlap Gain vs KB Downloaded | Priority-based repair outperforms uniform random repair by $\ge 2\times$ |
 | **E8** | Device Benchmark | Migration Latency, Shard Size, RSS | Edge migration runs orders of magnitude faster than full re-embedding |
 | **E9** | Feature Importance Ablation | Loss Prediction MSE | Anchor distance and score margins provide dominant predictive power |

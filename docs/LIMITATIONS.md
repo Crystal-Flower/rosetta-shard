@@ -4,14 +4,14 @@
 
 ## 1. Conformal Guarantee Scope
 - **Marginal vs Conditional Coverage:** The statistical guarantee $P(\text{overlap} \ge \text{certified}) \ge 1 - \alpha$ is marginal (averaged over the population of exchangeable queries). It does not guarantee exact per-instance coverage for every individual outlier.
-- **Distribution Shift:** Conformal prediction assumes query exchangeability between the calibration set $Q_{cal}$ and runtime test queries. When the edge query distribution undergoes strong domain shift (e.g. medical queries evaluated against a general-domain calibration set), coverage may degrade. Our system uses `sim_anchor_max` to explicitly detect OOD queries and force escalation.
+- **Distribution Shift:** Conformal prediction assumes query exchangeability between the calibration set $Q_{\mathrm{cal}}$ and runtime test queries. When the edge query distribution undergoes strong domain shift (e.g. medical queries evaluated against a general-domain calibration set), coverage may degrade. Our system uses `sim_anchor_max` to explicitly detect OOD queries and force escalation.
 - **Reference Corpus Fidelity vs Local Corpus Content:** The Recall Certificate certifies fidelity against the reference search index (i.e. whether the query vector preserves its top-$k$ alignment with the cloud space). It does not certify that the private local database necessarily contains a relevant document for an arbitrary query.
 
 ## 2. Privacy & Information Leakage in Adapter Bundles
 - The adapter bundle contains **no raw documents** and **no text passages**.
 - It does contain:
   1. The linear transformation matrix $W$.
-  2. K-means anchor centroids in small-model space ($\mu_k \in \mathbb{R}^{d_{small}}$).
+  2. K-means anchor centroids in small-model space ($\mu_k \in \mathbb{R}^{d_{\mathrm{small}}}$).
   While vector centroids cannot be inverted to exact original sentences without substantial reconstruction risk, they do encode statistical characteristics of the training domain. Deployments with extreme privacy constraints should use synthetic public anchor texts.
 
 ## 3. Dimensionality & Model Family Limits

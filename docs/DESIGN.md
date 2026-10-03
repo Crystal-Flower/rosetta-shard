@@ -23,7 +23,7 @@ Every vector store wrapper strictly validates that incoming queries match the st
 
 ### Pillar 2: Lightweight Anchor-Trained Adapter (`rosetta/adapters/`)
 Instead of re-embedding the corpus, Rosetta Shard trains an adapter mapping:
-$$W \in \mathbb{R}^{d_{small} \times d_{large}}$$
+$$W \in \mathbb{R}^{d_{\mathrm{small}} \times d_{\mathrm{large}}}$$
 trained on paired anchor vectors $(x_i, y_i)$ embedded cloud-side.
 Two core closed-form adapters are supported:
 1. **Ridge Regression:** Minimizes regularized reconstruction error $\|XW - Y\|_F^2 + \lambda \|W\|_F^2$.
@@ -39,21 +39,21 @@ To migrate edge memory without downtime or corruption:
 
 ### Pillar 4: Calibrated Conformal Recall Certificate (`rosetta/certificate.py`)
 Linear projection cannot preserve 100% of high-dimensional geometry. Therefore, every translated query must be certified:
-- Let loss $\ell(q) = 1 - \text{overlap@k}(\hat{q}, q^*)$ over a reference corpus.
+- Let loss $\ell(q) = 1 - \mathrm{overlap}_k(\hat{q}, q^*)$ over a reference corpus.
 - The edge device extracts lightweight features $f(q)$ without requiring the large model:
-  1. Maximum similarity to anchor centroids ($sim\_anchor\_max$).
-  2. Top-5 centroid similarity mean ($sim\_anchor\_top5$).
-  3. Score margins between top hits ($margin\_1\_10$, $margin\_1\_2$).
+  1. Maximum similarity to anchor centroids (`sim_anchor_max`).
+  2. Top-5 centroid similarity mean (`sim_anchor_top5`).
+  3. Score margins between top hits (`margin_1_10`, `margin_1_2`).
   4. Local fit error of nearest anchor centroids.
 - A calibrated predictor $\hat{h}(f)$ estimates expected loss.
-- Using **Split Conformal Prediction**, we compute a nonconformity quantile $\hat{q}_\alpha$ on held-out calibration queries $Q_{cal}$ such that:
+- Using **Split Conformal Prediction**, we compute a nonconformity quantile $\hat{q}_\alpha$ on held-out calibration queries $Q_{\mathrm{cal}}$ such that:
 $$P\left(\ell(q) \le \hat{h}(f(q)) + \hat{q}_\alpha\right) \ge 1 - \alpha$$
 The edge device outputs a guaranteed Certified Recall:
-$$\text{Certified Overlap@k} = 1 - \min\left(1, \max\left(0, \hat{h}(f(q)) + \hat{q}_\alpha\right)\right)$$
+$$\text{Certified Overlap}_k = 1 - \min\left(1, \max\left(0, \hat{h}(f(q)) + \hat{q}_\alpha\right)\right)$$
 
 ### Pillar 5: Intelligent Router (`rosetta/router.py`)
 Based on the certified recall:
-- If $\text{Certified Recall} \ge \tau_{serve}$: **Serve locally** (0 network bytes, instant response).
+- If $\text{Certified Recall} \ge \tau_{\mathrm{serve}}$: **Serve locally** (0 network bytes, instant response).
 - If below threshold and network available: **Escalate** to cloud index search.
 - If offline and below threshold: **Refuse low confidence** or serve with an explicit warning banner.
 
