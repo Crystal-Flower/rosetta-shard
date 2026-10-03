@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rosetta Shard — Real-World Mission Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #090d16;
+  --bg-card: rgba(15, 23, 42, 0.75);
+  --panel: #0d1527;
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --cyan: #38bdf8;
+  --cyan-glow: rgba(56, 189, 248, 0.35);
+  --emerald: #10b981;
+  --emerald-glow: rgba(16, 185, 129, 0.35);
+  --amber: #f59e0b;
+  --amber-glow: rgba(245, 158, 11, 0.35);
+  --rose: #f43f5e;
+  --rose-glow: rgba(244, 63, 94, 0.35);
+  --purple: #a855f7;
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --line: rgba(255, 255, 255, 0.08);
+  --radius: 12px;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+[data-theme="light"] {
+  --bg: #f8fafc;
+  --bg-card: #ffffff;
+  --panel: #ffffff;
+  --panel-border: #e2e8f0;
+  --cyan: #0284c7;
+  --cyan-glow: rgba(2, 132, 199, 0.2);
+  --emerald: #059669;
+  --emerald-glow: rgba(5, 150, 105, 0.2);
+  --amber: #d97706;
+  --amber-glow: rgba(217, 119, 6, 0.2);
+  --rose: #e11d48;
+  --rose-glow: rgba(225, 29, 72, 0.2);
+  --text: #0f172a;
+  --text-muted: #475569;
+  --text-dim: #64748b;
+  --line: #e2e8f0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  line-height: 1.5;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* HEADER */
+header {
+  background: rgba(13, 21, 39, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 12px 24px;
+}
+[data-theme="light"] header {
+  background: rgba(255, 255, 255, 0.9);
+}
+.header-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+.logo-badge {
+  background: linear-gradient(135deg, #0284c7, #2563eb);
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  letter-spacing: -0.02em;
+  box-shadow: 0 0 16px var(--cyan-glow);
+}
+.logo-text h1 {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.logo-text span {
+  font-size: 11px;
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.btn-nav {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+.btn-nav:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--cyan);
+}
+.btn-nav-primary {
+  background: linear-gradient(135deg, #0284c7, #2563eb);
+  color: #fff;
+  border-color: transparent;
+}
+.btn-nav-primary:hover {
+  box-shadow: 0 0 15px var(--cyan-glow);
+}
+.theme-toggle-btn {
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line);
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* MAIN CONTENT */
+main {
+  flex: 1;
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* SCENARIO SELECTOR BANNER */
+.mission-banner {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(13, 21, 39, 0.7));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+[data-theme="light"] .mission-banner {
+  background: linear-gradient(135deg, #ffffff, #f1f5f9);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+.mission-info h2 {
+  font-size: 18px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.mission-info p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.scenario-selector {
+  display: flex;
+  gap: 8px;
+}
+.scenario-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.scenario-btn:hover {
+  color: var(--text);
+  border-color: var(--cyan);
+}
+.scenario-btn.active {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: var(--cyan);
+  color: var(--cyan);
+  box-shadow: 0 0 12px var(--cyan-glow);
+}
+
+/* TIMELINE & CONTROL DOCK */
+.timeline-hub {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+}
+.timeline-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.playback-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.btn-play {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 0 16px var(--emerald-glow);
+  transition: all 0.2s ease;
+}
+.btn-play:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 24px var(--emerald-glow);
+}
+.btn-play.playing {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 0 16px var(--amber-glow);
+}
+.btn-step {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-step:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--cyan);
+}
+.speed-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.btn-speed {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line);
+  color: var(--text-muted);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-speed.active {
+  background: var(--cyan);
+  color: #000;
+  border-color: var(--cyan);
+}
+
+.timeline-track {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  position: relative;
+}
+.timeline-step {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+.timeline-step:hover {
+  border-color: var(--cyan);
+  background: rgba(56, 189, 248, 0.04);
+}
+.timeline-step.active {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: var(--cyan);
+  box-shadow: 0 0 20px var(--cyan-glow);
+}
+.timeline-step.completed {
+  border-color: var(--emerald);
+  background: rgba(16, 185, 129, 0.05);
+}
+.step-time {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-dim);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.step-title {
+  font-size: 12px;
+  font-weight: 800;
+  margin-top: 4px;
+  color: var(--text);
+}
+.step-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  line-height: 1.3;
+}
+
+/* SPLIT SIMULATION ARENA */
+.simulation-arena {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 1024px) {
+  .simulation-arena { grid-template-columns: 1fr; }
+  .timeline-track { grid-template-columns: 1fr; }
+}
+
+/* UNIVERSE CARDS */
+.universe-card {
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+.universe-card.naive {
+  border-color: rgba(244, 63, 94, 0.4);
+  background: linear-gradient(180deg, rgba(244, 63, 94, 0.05) 0%, rgba(15, 23, 42, 0.8) 100%);
+}
+[data-theme="light"] .universe-card.naive {
+  background: linear-gradient(180deg, rgba(244, 63, 94, 0.06) 0%, #ffffff 100%);
+}
+.universe-card.rosetta {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.05) 0%, rgba(15, 23, 42, 0.8) 100%);
+}
+[data-theme="light"] .universe-card.rosetta {
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.06) 0%, #ffffff 100%);
+}
+
+.universe-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 14px;
+}
+.universe-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.universe-icon {
+  font-size: 24px;
+}
+.universe-title {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.universe-subtitle {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+.universe-badge {
+  font-size: 10px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  padding: 4px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+.badge-danger {
+  background: rgba(244, 63, 94, 0.15);
+  color: #fecdd3;
+  border: 1px solid rgba(244, 63, 94, 0.4);
+}
+.badge-success {
+  background: rgba(16, 185, 129, 0.15);
+  color: #a7f3d0;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+/* ANIMATION VIEWPORT CANVAS / SVG */
+.viewport-frame {
+  height: 220px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+[data-theme="light"] .viewport-frame {
+  background: #f1f5f9;
+}
+.viewport-grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+[data-theme="light"] .viewport-grid-bg {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+}
+
+.drone-svg {
+  position: relative;
+  z-index: 10;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.status-overlay {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+}
+.overlay-pill {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid var(--line);
+}
+.alert-banner {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  z-index: 20;
+  backdrop-filter: blur(8px);
+}
+.alert-banner.danger {
+  background: rgba(244, 63, 94, 0.25);
+  border: 1px solid rgba(244, 63, 94, 0.5);
+  color: #fff;
+}
+.alert-banner.safe {
+  background: rgba(16, 185, 129, 0.25);
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  color: #fff;
+}
+
+/* REAL-TIME TELEMETRY METRICS */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.metric-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+}
+.metric-lbl {
+  font-size: 9px;
+  font-family: var(--font-mono);
+  color: var(--text-dim);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.metric-val {
+  font-size: 16px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  margin-top: 4px;
+}
+
+/* RETRIEVED DOCUMENT & AUTOPILOT ACTION HUD */
+.retrieval-card {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+[data-theme="light"] .retrieval-card {
+  background: #f8fafc;
+}
+.retrieval-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.retrieval-label {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.score-badge {
+  font-size: 11px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.score-fake {
+  background: rgba(244, 63, 94, 0.2);
+  color: var(--rose);
+}
+.score-certified {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--emerald);
+}
+.doc-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text);
+}
+.doc-snippet {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* AUTOPILOT DECISION OUTPUT */
+.action-box {
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.action-box.failure {
+  background: rgba(244, 63, 94, 0.08);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  color: #fecdd3;
+}
+.action-box.success {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #a7f3d0;
+}
+
+/* LIVE FLIGHT LOG TERMINAL */
+.log-terminal {
+  background: #050811;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  max-height: 110px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+[data-theme="light"] .log-terminal {
+  background: #1e293b;
+  color: #cbd5e1;
+}
+.log-entry {
+  display: flex;
+  gap: 8px;
+}
+.log-ts { color: var(--text-dim); }
+.log-warn { color: var(--rose); font-weight: 700; }
+.log-ok { color: var(--emerald); font-weight: 700; }
+.log-info { color: var(--cyan); }
+
+/* COMPARISON FOOTER / TAKEAWAY */
+.comparison-summary {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+@media (max-width: 768px) {
+  .comparison-summary { grid-template-columns: 1fr; }
+}
+.summary-item h3 {
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.summary-item p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* CRASH ANIMATION KEYFRAMES */
+@keyframes shakeViolent {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  20% { transform: translate(-4px, 3px) rotate(-3deg); }
+  40% { transform: translate(4px, -2px) rotate(4deg); }
+  60% { transform: translate(-3px, 1px) rotate(-2deg); }
+  80% { transform: translate(3px, 4px) rotate(3deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+@keyframes crashDown {
+  0% { transform: translateY(0) rotate(0); opacity: 1; }
+  60% { transform: translateY(50px) rotate(35deg); opacity: 0.9; }
+  100% { transform: translateY(80px) rotate(80deg) scale(0.7); opacity: 0.2; }
+}
+@keyframes floatSmooth {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+@keyframes pulseShield {
+  0% { filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.4)); }
+  50% { filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.8)); }
+  100% { filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.4)); }
+}
+.drone-crashing {
+  animation: crashDown 1.8s forwards ease-in;
+}
+.drone-shaking {
+  animation: shakeViolent 0.25s infinite ease-in-out;
+}
+.drone-smooth {
+  animation: floatSmooth 3s infinite ease-in-out, pulseShield 2s infinite ease-in-out;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/index.html" class="logo-group">
+      <div class="logo-badge">🏺 RS-402</div>
+      <div class="logo-text">
+        <h1>ROSETTA SHARD</h1>
+        <span>REAL-WORLD MISSION SIMULATOR</span>
+      </div>
+    </a>
+
+    <div class="nav-actions">
+      <a href="/index.html" class="btn-nav">
+        <span>⬅ Dual-Cockpit Console</span>
+      </a>
+      <button class="theme-toggle-btn" id="theme-btn" onclick="toggleTheme()">
+        <span id="theme-btn-text">☀️ White Theme</span>
+      </button>
+      <a href="/index.html#benchmarks" class="btn-nav btn-nav-primary">
+        <span>📊 View Benchmarks</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- SCENARIO HEADER -->
+  <div class="mission-banner">
+    <div class="mission-info">
+      <h2 id="scenario-title">🛰️ CRISIS SIMULATION: DISASTER RECON DRONE UNIT #402</h2>
+      <p id="scenario-desc">
+        Drone operating in radio-denied mountainous terrain (9.6 kbps satlink). Base station upgrades cloud embeddings mid-flight.
+        Drone battery sensors report: <b>48.2°C thermal surge</b> during steep mountain rotor lift.
+      </p>
+    </div>
+    <div class="scenario-selector">
+      <button class="scenario-btn active" onclick="switchScenario('drone')">🚁 Arctic Drone</button>
+      <button class="scenario-btn" onclick="switchScenario('medic')">🏥 Field Medic Tablet</button>
+      <button class="scenario-btn" onclick="switchScenario('subsea')">🌊 Deep-Sea Rover</button>
+    </div>
+  </div>
+
+  <!-- TIMELINE CONTROLS -->
+  <div class="timeline-hub">
+    <div class="timeline-controls">
+      <div class="playback-group">
+        <button class="btn-play" id="btn-play" onclick="togglePlay()">
+          <span id="play-icon">▶</span>
+          <span id="play-text">START MISSION SIMULATION</span>
+        </button>
+        <button class="btn-step" onclick="prevStep()">⏮ Previous</button>
+        <button class="btn-step" onclick="nextStep()">Next Step ⏭</button>
+        <button class="btn-step" onclick="resetSimulation()">↺ Reset</button>
+      </div>
+
+      <div class="speed-group">
+        <span>Speed:</span>
+        <button class="btn-speed active" onclick="setSpeed(1, this)">1x</button>
+        <button class="btn-speed" onclick="setSpeed(1.5, this)">1.5x</button>
+        <button class="btn-speed" onclick="setSpeed(2, this)">2x</button>
+      </div>
+    </div>
+
+    <!-- 5-PHASE INTERACTIVE TRACK -->
+    <div class="timeline-track">
+      <div class="timeline-step active" id="step-0" onclick="goToStep(0)">
+        <div class="step-time">T+00s · PHASE 1</div>
+        <div class="step-title">☁️ Cloud Model Upgrade</div>
+        <div class="step-desc">Base station deploys 1024-d model with updated protocols</div>
+      </div>
+      <div class="timeline-step" id="step-1" onclick="goToStep(1)">
+        <div class="step-time">T+02s · PHASE 2</div>
+        <div class="step-title">📡 Bandwidth Crisis</div>
+        <div class="step-desc">1.34 GB re-embed download vs 128 KB math bundle</div>
+      </div>
+      <div class="timeline-step" id="step-2" onclick="goToStep(2)">
+        <div class="step-time">T+05s · PHASE 3</div>
+        <div class="step-title">🔍 Emergency Query</div>
+        <div class="step-desc">Battery overheating query triggered mid-flight</div>
+      </div>
+      <div class="timeline-step" id="step-3" onclick="goToStep(3)">
+        <div class="step-time">T+08s · PHASE 4</div>
+        <div class="step-title">🤖 Autopilot Decision</div>
+        <div class="step-desc">Hallucinated 0.82 score vs Conformal 92% certificate</div>
+      </div>
+      <div class="timeline-step" id="step-4" onclick="goToStep(4)">
+        <div class="step-time">T+11s · PHASE 5</div>
+        <div class="step-title">💥 Mission Outcome</div>
+        <div class="step-desc">Thermal runaway crash vs Safe cargo delivery</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPLIT SIMULATION ARENA -->
+  <div class="simulation-arena">
+
+    <!-- LEFT: WITHOUT ROSETTA ADAPTER (NAIVE DB) -->
+    <div class="universe-card naive" id="card-naive">
+      <div class="universe-header">
+        <div class="universe-title-group">
+          <span class="universe-icon">⚠️</span>
+          <div>
+            <div class="universe-title" style="color:var(--rose);">WITHOUT ROSETTA ADAPTER</div>
+            <div class="universe-subtitle">Standard Vector DB · Naive Cross-Model Query</div>
+          </div>
+        </div>
+        <span class="universe-badge badge-danger" id="naive-badge">SILENT COLLAPSE RISK</span>
+      </div>
+
+      <!-- ANIMATED VIEWPORT -->
+      <div class="viewport-frame" id="naive-viewport">
+        <div class="viewport-grid-bg"></div>
+        <div class="status-overlay">
+          <span class="overlay-pill" id="naive-alt" style="color:var(--rose);">ALT: 240m · GPS LOCK</span>
+          <span class="overlay-pill" id="naive-temp" style="color:var(--rose);">TEMP: 48.2°C (SURGE)</span>
+        </div>
+
+        <!-- DRONE SVG -->
+        <svg class="drone-svg" id="naive-drone-svg" width="130" height="90" viewBox="0 0 130 90" fill="none">
+          <!-- Rotors -->
+          <circle cx="25" cy="20" r="16" stroke="rgba(244,63,94,0.6)" stroke-width="2" stroke-dasharray="4 2"/>
+          <circle cx="105" cy="20" r="16" stroke="rgba(244,63,94,0.6)" stroke-width="2" stroke-dasharray="4 2"/>
+          <line x1="15" y1="20" x2="35" y2="20" stroke="var(--rose)" stroke-width="3"/>
+          <line x1="95" y1="20" x2="115" y2="20" stroke="var(--rose)" stroke-width="3"/>
+          <!-- Drone Arms -->
+          <path d="M25 20 L65 45 L105 20" stroke="#64748b" stroke-width="4" stroke-linecap="round"/>
+          <path d="M35 70 L65 45 L95 70" stroke="#64748b" stroke-width="4" stroke-linecap="round"/>
+          <!-- Central Body -->
+          <rect x="50" y="32" width="30" height="26" rx="6" fill="#1e293b" stroke="var(--rose)" stroke-width="2"/>
+          <!-- Camera Eye / Sensor -->
+          <circle cx="65" cy="45" r="5" fill="var(--rose)"/>
+          <!-- Smoke / Fire Graphic (hidden by default) -->
+          <g id="naive-fire" style="display:none;">
+            <path d="M55 25 Q65 10 75 25 Q80 15 65 5 Q50 15 55 25" fill="#f43f5e" opacity="0.9"/>
+            <path d="M58 22 Q65 12 72 22 Q75 16 65 8 Q55 16 58 22" fill="#fbbf24" opacity="0.9"/>
+          </g>
+        </svg>
+
+        <div class="alert-banner danger" id="naive-alert">
+          WARNING: Coordinate Space Desync! Cloud in 1024-d, Edge in 384-d.
+        </div>
+      </div>
+
+      <!-- METRICS ROW -->
+      <div class="metrics-row">
+        <div class="metric-box">
+          <span class="metric-lbl">Bandwidth Req</span>
+          <span class="metric-val" id="naive-metric-bw" style="color:var(--rose);">1.34 GB</span>
+        </div>
+        <div class="metric-box">
+          <span class="metric-lbl">Vector Overlap</span>
+          <span class="metric-val" id="naive-metric-overlap" style="color:var(--rose);">2.4%</span>
+        </div>
+        <div class="metric-box">
+          <span class="metric-lbl">Battery Health</span>
+          <span class="metric-val" id="naive-metric-batt" style="color:var(--rose);">48.2°C</span>
+        </div>
+      </div>
+
+      <!-- RETRIEVED DOCUMENT -->
+      <div class="retrieval-card">
+        <div class="retrieval-top">
+          <span class="retrieval-label">Retrieved Memory (Standard DB)</span>
+          <span class="score-badge score-fake" id="naive-doc-score">Score: 0.824 (FAKE)</span>
+        </div>
+        <div class="doc-title" id="naive-doc-title">Doc #06: CAN Bus Error Handling (IRRELEVANT)</div>
+        <div class="doc-snippet" id="naive-doc-snippet">
+          "Controller Area Network error counters transition transceiver into bus-off state upon bit stuffing errors..."
+        </div>
+      </div>
+
+      <!-- AUTOPILOT ACTION -->
+      <div class="action-box failure" id="naive-action">
+        <b>Autopilot Reaction:</b> Executed false protocol: Reset CAN bus controller. Maintained 100% rotor draw. Thermal load ignored!
+      </div>
+
+      <!-- LOG TERMINAL -->
+      <div class="log-terminal" id="naive-logs">
+        <div class="log-entry"><span class="log-ts">[00:00]</span> <span>Cloud model updated to bge-large (1024-d).</span></div>
+        <div class="log-entry"><span class="log-ts">[00:02]</span> <span class="log-warn">Model sync: Satlink 9.6 kbps requires 31.2 hrs! Download aborted.</span></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: WITH ROSETTA SHARD (OUR ADAPTER) -->
+    <div class="universe-card rosetta" id="card-rosetta">
+      <div class="universe-header">
+        <div class="universe-title-group">
+          <span class="universe-icon">🛡️</span>
+          <div>
+            <div class="universe-title" style="color:var(--emerald);">WITH ROSETTA SHARD</div>
+            <div class="universe-subtitle">128 KB Zero-Text Adapter · Qdrant Edge Space Guard</div>
+          </div>
+        </div>
+        <span class="universe-badge badge-success" id="rosetta-badge">SPACE GUARD CERTIFIED</span>
+      </div>
+
+      <!-- ANIMATED VIEWPORT -->
+      <div class="viewport-frame" id="rosetta-viewport">
+        <div class="viewport-grid-bg"></div>
+        <div class="status-overlay">
+          <span class="overlay-pill" id="rosetta-alt" style="color:var(--emerald);">ALT: 240m · STABLE</span>
+          <span class="overlay-pill" id="rosetta-temp" style="color:var(--emerald);">TEMP: 48.2°C → 36.4°C</span>
+        </div>
+
+        <!-- DRONE SVG -->
+        <svg class="drone-svg drone-smooth" id="rosetta-drone-svg" width="130" height="90" viewBox="0 0 130 90" fill="none">
+          <!-- Protective Shield Bubble -->
+          <circle cx="65" cy="45" r="44" stroke="rgba(16,185,129,0.4)" stroke-width="2" stroke-dasharray="6 3"/>
+          <!-- Rotors -->
+          <circle cx="25" cy="20" r="16" stroke="rgba(56,189,248,0.7)" stroke-width="2"/>
+          <circle cx="105" cy="20" r="16" stroke="rgba(56,189,248,0.7)" stroke-width="2"/>
+          <line x1="15" y1="20" x2="35" y2="20" stroke="var(--cyan)" stroke-width="3"/>
+          <line x1="95" y1="20" x2="115" y2="20" stroke="var(--cyan)" stroke-width="3"/>
+          <!-- Drone Arms -->
+          <path d="M25 20 L65 45 L105 20" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/>
+          <path d="M35 70 L65 45 L95 70" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/>
+          <!-- Central Body -->
+          <rect x="50" y="32" width="30" height="26" rx="6" fill="#0f172a" stroke="var(--emerald)" stroke-width="2"/>
+          <!-- Sensor Eye -->
+          <circle cx="65" cy="45" r="5" fill="var(--emerald)"/>
+          <!-- Parachute / Emergency Medical Cargo Drop (shown at end) -->
+          <g id="rosetta-cargo" style="display:none;">
+            <path d="M45 75 Q65 60 85 75 Z" fill="var(--cyan)" opacity="0.8"/>
+            <line x1="50" y1="75" x2="65" y2="85" stroke="#fff" stroke-width="1"/>
+            <line x1="80" y1="75" x2="65" y2="85" stroke="#fff" stroke-width="1"/>
+            <rect x="61" y="83" width="8" height="6" fill="var(--emerald)"/>
+          </g>
+        </svg>
+
+        <div class="alert-banner safe" id="rosetta-alert">
+          PROTECTED: Space Guard halted mismatch; 128 KB bundle migrated shard in 66ms.
+        </div>
+      </div>
+
+      <!-- METRICS ROW -->
+      <div class="metrics-row">
+        <div class="metric-box">
+          <span class="metric-lbl">Bandwidth Used</span>
+          <span class="metric-val" id="rosetta-metric-bw" style="color:var(--cyan);">128.5 KB</span>
+        </div>
+        <div class="metric-box">
+          <span class="metric-lbl">Certified Overlap</span>
+          <span class="metric-val" id="rosetta-metric-overlap" style="color:var(--emerald);">92.4%</span>
+        </div>
+        <div class="metric-box">
+          <span class="metric-lbl">Battery Health</span>
+          <span class="metric-val" id="rosetta-metric-batt" style="color:var(--emerald);">36.4°C</span>
+        </div>
+      </div>
+
+      <!-- RETRIEVED DOCUMENT -->
+      <div class="retrieval-card">
+        <div class="retrieval-top">
+          <span class="retrieval-label">Retrieved Memory (Rosetta Shard)</span>
+          <span class="score-badge score-certified" id="rosetta-doc-score">Cert: 94% Overlap</span>
+        </div>
+        <div class="doc-title" id="rosetta-doc-title">Doc #01: Lithium Battery Degradation</div>
+        <div class="doc-snippet" id="rosetta-doc-snippet">
+          "Throttling cell discharge below 1.2C immediately drops core temperature below critical 45°C trip point..."
+        </div>
+      </div>
+
+      <!-- AUTOPILOT ACTION -->
+      <div class="action-box success" id="rosetta-action">
+        <b>Autopilot Reaction:</b> Executed certified cooling protocol: Reduced aux rotor draw to 1.1C, engaged passive ram-air duct. Temp stabilized at 36.4°C!
+      </div>
+
+      <!-- LOG TERMINAL -->
+      <div class="log-terminal" id="rosetta-logs">
+        <div class="log-entry"><span class="log-ts">[00:00]</span> <span>Cloud model updated to bge-large (1024-d).</span></div>
+        <div class="log-entry"><span class="log-ts">[00:01]</span> <span class="log-ok">128.5 KB Adapter Bundle pushed over satlink in 0.12s. Zero text transferred.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- COMPARISON SUMMARY BOX -->
+  <div class="comparison-summary">
+    <div class="summary-item">
+      <h3 style="color:var(--rose);">❌ The Standard Vector DB Flaw</h3>
+      <p>
+        Vector databases do not validate coordinate manifolds. When cloud models upgrade, searches across mismatched embeddings produce <b>200 OK with hallucinated 0.8+ cosine scores</b>. Autonomous systems act on dangerous false memories.
+      </p>
+    </div>
+    <div class="summary-item">
+      <h3 style="color:var(--cyan);">⚡ Zero-Text Mathematical Bridge</h3>
+      <p>
+        Instead of transferring gigabytes or exposing private documents, Rosetta Shard ships a <b>128 KB closed-form adapter bundle</b>. In-process streaming migrates Qdrant Edge local shards in <b>66 milliseconds</b> (203× faster than CPU re-embedding).
+      </p>
+    </div>
+    <div class="summary-item">
+      <h3 style="color:var(--emerald);">🛡️ Conformal Trust Certification</h3>
+      <p>
+        Conformal prediction computes distribution-free statistical bounds: $\mathbb{P}(\text{Overlap} \ge \tau) \ge 1-\alpha$. Autonomous drones know exactly when memory can be trusted and when to escalate to fallback fail-safes.
+      </p>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// --- SCENARIO DATA CONFIGURATIONS ---
+const SCENARIOS = {
+  drone: {
+    title: "🛰️ CRISIS SIMULATION: DISASTER RECON DRONE UNIT #402",
+    desc: "Drone operating in radio-denied mountainous terrain (9.6 kbps satlink). Base station upgrades cloud embeddings mid-flight. Drone battery sensors report: <b>48.2°C thermal surge</b> during steep mountain rotor lift.",
+    query: "Lithium battery thermal degradation rate above 45C",
+    steps: [
+      {
+        time: "T+00s",
+        phase: "Phase 1: Cloud Model Upgrade",
+        naiveAlert: "ALERT: Cloud model updated to 1024-d (bge-large). Edge shard is still 384-d.",
+        naiveBadge: "DESYNCED",
+        naiveTemp: "TEMP: 48.2°C (SURGE)",
+        naiveBw: "0 KB",
+        naiveOverlap: "--",
+        naiveBatt: "48.2°C",
+        naiveDocTitle: "Awaiting Query...",
+        naiveDocScore: "Score: --",
+        naiveDocSnippet: "Sensors detect thermal surge on cell bank #3. Autopilot queries memory for mitigation.",
+        naiveAction: "Standby: Query initiated to local shard.",
+        naiveLog: "[00:00] Cloud base upgrades embedding space to bge-large (1024-d).",
+        
+        rosettaAlert: "PROTECTED: Space Guard tagged cloud upgrade. Shard protected from desync.",
+        rosettaBadge: "GUARD ACTIVE",
+        rosettaTemp: "TEMP: 48.2°C (SURGE)",
+        rosettaBw: "0 KB",
+        rosettaOverlap: "--",
+        rosettaBatt: "48.2°C",
+        rosettaDocTitle: "Awaiting Query...",
+        rosettaDocScore: "Score: --",
+        rosettaDocSnippet: "Sensors detect thermal surge. Rosetta Shard intercepts query through Space Guard.",
+        rosettaAction: "Standby: Space Guard verifying coordinate space parity.",
+        rosettaLog: "[00:00] Space Guard tags cloud space: bge-large@main/1024/l2."
+      },
+      {
+        time: "T+02s",
+        phase: "Phase 2: Bandwidth Crisis & Delivery",
+        naiveAlert: "BANDWIDTH FAILURE: 1.34 GB model download requires 31.2 hrs on satlink! Aborted.",
+        naiveBadge: "BANDWIDTH DEAD",
+        naiveTemp: "TEMP: 51.5°C (CLIMBING)",
+        naiveBw: "1.34 GB (FAILED)",
+        naiveOverlap: "0%",
+        naiveBatt: "51.5°C",
+        naiveDocTitle: "No Update Possible",
+        naiveDocScore: "Score: --",
+        naiveDocSnippet: "Bandwidth exhausted. Device must execute query on stale 384-d database or zero-pad.",
+        naiveAction: "Autopilot forced to run unaligned query across coordinate space boundary.",
+        naiveLog: "[00:02] Model download failed: 9.6 kbps satlink choked. Battery 42%.",
+        
+        rosettaAlert: "LIGHTWEIGHT RESCUE: 128.5 KB Ridge Adapter bundle received in 120ms!",
+        rosettaBadge: "BUNDLE RECEIVED",
+        rosettaTemp: "TEMP: 50.8°C",
+        rosettaBw: "128.5 KB",
+        rosettaOverlap: "90% Certified",
+        rosettaBatt: "50.8°C",
+        rosettaDocTitle: "Bundle Verified",
+        rosettaDocScore: "Size: 128.5 KB",
+        rosettaDocSnippet: "Compact closed-form matrix W + 100 anchor statistics loaded into device memory. Zero raw text exposed.",
+        rosettaAction: "Executing atomic shard migration on Qdrant Edge in 66 milliseconds.",
+        rosettaLog: "[00:02] 128.5 KB bundle received over satlink in 0.12s. Shard migrated in 66ms."
+      },
+      {
+        time: "T+05s",
+        phase: "Phase 3: Emergency Query Execution",
+        naiveAlert: "SILENT COLLAPSE: Dot product computed against unaligned axes! 200 OK returned.",
+        naiveBadge: "SILENT FAILURE",
+        naiveTemp: "TEMP: 55.4°C (CRITICAL)",
+        naiveBw: "1.34 GB",
+        naiveOverlap: "2.4%",
+        naiveBatt: "55.4°C",
+        naiveDocTitle: "Doc #06: CAN Bus Error Handling",
+        naiveDocScore: "Score: 0.824 (FAKE)",
+        naiveDocSnippet: "Controller Area Network error counters transition transceiver into bus-off state upon consecutive bit stuffing errors.",
+        naiveAction: "Autopilot believes CAN bus glitch occurred. Prepares to cycle bus transceiver.",
+        naiveLog: "[00:05] Query returned Doc #06 with deceptive 0.824 score. No error raised!",
+        
+        rosettaAlert: "SPACE GUARD VALIDATION: Query projected through certified Ridge Adapter.",
+        rosettaBadge: "CONFORMAL CERT",
+        rosettaTemp: "TEMP: 46.1°C (COOLING)",
+        rosettaBw: "128.5 KB",
+        rosettaOverlap: "92.4%",
+        rosettaBatt: "46.1°C",
+        rosettaDocTitle: "Doc #01: Lithium Battery Degradation",
+        rosettaDocScore: "Cert: 94% Overlap",
+        rosettaDocSnippet: "Throttling cell discharge below 1.2C immediately drops core temperature below critical 45°C trip point.",
+        rosettaAction: "Conformal recall certificate guarantees P(Overlap ≥ 90%) ≥ 95%. Safe to act!",
+        rosettaLog: "[00:05] Conformal certificate issued: overlap=0.924, error bound P>0.95."
+      },
+      {
+        time: "T+08s",
+        phase: "Phase 4: Autonomous Action",
+        naiveAlert: "WRONG ACTION TAKEN: Resetting CAN bus. Throttle kept at 100%. Thermal runaway!",
+        naiveBadge: "OVERHEATING",
+        naiveTemp: "TEMP: 63.8°C (RUNAWAY)",
+        naiveBw: "1.34 GB",
+        naiveOverlap: "2.4%",
+        naiveBatt: "63.8°C",
+        naiveDocTitle: "Doc #06: CAN Bus Error Handling",
+        naiveDocScore: "Score: 0.824 (FAKE)",
+        naiveDocSnippet: "Autopilot cycled CAN bus. Power draw remained at maximum. Heat dissipation collapsed.",
+        naiveAction: "CRITICAL: Cell #3 punctured from internal heat expansion. Smoke detected!",
+        naiveLog: "[00:08] Autopilot reset CAN transceiver. Rotor draw 100%. Cell temp 63.8°C.",
+        
+        rosettaAlert: "CORRECT ACTION TAKEN: Discharge throttled to 1.1C. Ram-air duct opened.",
+        rosettaBadge: "COOLING ACTIVE",
+        rosettaTemp: "TEMP: 40.2°C (STABLE)",
+        rosettaBw: "128.5 KB",
+        rosettaOverlap: "92.4%",
+        rosettaBatt: "40.2°C",
+        rosettaDocTitle: "Doc #01: Lithium Battery Degradation",
+        rosettaDocScore: "Cert: 94% Overlap",
+        rosettaDocSnippet: "Dynamic voltage throttling dropped pack thermal generation by 48% within 2 seconds.",
+        rosettaAction: "Rotor efficiency stabilized. Thermal trip point avoided. Flight trajectory maintained.",
+        rosettaLog: "[00:08] Throttled rotor discharge. Pack temperature dropped below 42°C."
+      },
+      {
+        time: "T+11s",
+        phase: "Phase 5: Final Mission Outcome",
+        naiveAlert: "💥 MISSION FAILED: Drone battery detonated in mid-air. Drone crashed in mountain gorge!",
+        naiveBadge: "💀 DESTROYED",
+        naiveTemp: "TEMP: 72.0°C (EXPLODED)",
+        naiveBw: "1.34 GB",
+        naiveOverlap: "2.4%",
+        naiveBatt: "0% (LOST)",
+        naiveDocTitle: "TELEMETRY LOST",
+        naiveDocScore: "Signal: DEAD",
+        naiveDocSnippet: "Autonomous drone lost. $120,000 aircraft and vital emergency medicine payload destroyed.",
+        naiveAction: "CATASTROPHIC FAILURE: Caused directly by silent semantic collapse in vector retrieval.",
+        naiveLog: "[00:11] Telemetry lost. Signal beacon offline. Drone impacted at coordinates 64°N.",
+        
+        rosettaAlert: "🏆 MISSION ACCOMPLISHED: Drone arrived at target zone. Emergency medical kit delivered!",
+        rosettaBadge: "✅ DELIVERED",
+        rosettaTemp: "TEMP: 36.4°C (NORMAL)",
+        rosettaBw: "128.5 KB",
+        rosettaOverlap: "92.4%",
+        rosettaBatt: "84% (HEALTHY)",
+        rosettaDocTitle: "Doc #01: Emergency Medical Drop",
+        rosettaDocScore: "Cert: 96% Overlap",
+        rosettaDocSnippet: "Payload successfully released over alpine rescue camp. Drone loitering for RTB.",
+        rosettaAction: "SUCCESS: 128 KB mathematical adapter prevented catastrophic silent failure.",
+        rosettaLog: "[00:11] Target coordinates reached. Parachute cargo released. Mission 100% complete."
+      }
+    ]
+  },
+  medic: {
+    title: "🏥 FIELD MEDIC CRISIS: BIOLOGICAL OUTBREAK CONTAGION TRIAGE",
+    desc: "Offline medical tablet in quarantine perimeter. Central CDC updates clinical embedding model with mutated pathogen protocols. Medic queries dosage for an acute symptom.",
+    query: "Mutated hemorrhagic fever pediatric antiviral contraindications",
+    steps: [
+      {
+        time: "T+00s",
+        phase: "Phase 1: Cloud CDC Update",
+        naiveAlert: "CDC deployed 1024-d epidemic model. Tablet is running legacy 384-d model.",
+        naiveBadge: "DESYNCED",
+        naiveTemp: "PATIENT: CRITICAL",
+        naiveBw: "0 KB",
+        naiveOverlap: "--",
+        naiveBatt: "98%",
+        naiveDocTitle: "Awaiting Triage...",
+        naiveDocScore: "--",
+        naiveDocSnippet: "Child presents with severe rash and thrombocytopenia. Doctor queries medication dosing.",
+        naiveAction: "Query dispatched to local offline tablet.",
+        naiveLog: "[00:00] CDC deployed Strain-Delta triage protocol into cloud index.",
+        
+        rosettaAlert: "PROTECTED: Space Guard active. Tablet coordinates tagged as bge-small.",
+        rosettaBadge: "GUARD ACTIVE",
+        rosettaTemp: "PATIENT: CRITICAL",
+        rosettaBw: "0 KB",
+        rosettaOverlap: "--",
+        rosettaBatt: "98%",
+        rosettaDocTitle: "Awaiting Triage...",
+        rosettaDocScore: "--",
+        rosettaDocSnippet: "Tablet receives query. Space Guard prepares conformal verification.",
+        rosettaAction: "Checking coordinate manifold parity.",
+        rosettaLog: "[00:00] CDC deployed Strain-Delta triage protocol into cloud index."
+      },
+      {
+        time: "T+02s",
+        phase: "Phase 2: Network Choke",
+        naiveAlert: "2.1 GB clinical LLM weights cannot download over jammed cellular cell tower.",
+        naiveBadge: "SYNC FAILED",
+        naiveTemp: "PATIENT: HYPOTENSIVE",
+        naiveBw: "2.1 GB (BLOCKED)",
+        naiveOverlap: "1.8%",
+        naiveBatt: "94%",
+        naiveDocTitle: "Un-migrated Index",
+        naiveDocScore: "--",
+        naiveDocSnippet: "Network congested in disaster area. Tablet forced to query old index with new query.",
+        naiveAction: "Executing raw cross-space search without translation.",
+        naiveLog: "[00:02] Network bandwidth choked (2.4 kbps). Large model download aborted.",
+        
+        rosettaAlert: "128 KB CDC Adapter broadcasted over low-frequency radio emergency beacon!",
+        rosettaBadge: "ADAPTER LOADED",
+        rosettaTemp: "PATIENT: STABILIZING",
+        rosettaBw: "128.5 KB",
+        rosettaOverlap: "91% Certified",
+        rosettaBatt: "97%",
+        rosettaDocTitle: "Delta Protocol Loaded",
+        rosettaDocScore: "Size: 128.5 KB",
+        rosettaDocSnippet: "Linear projection bundle adapted clinical embeddings in 45 milliseconds on tablet.",
+        rosettaAction: "Conformal recall model calibrated to Alpha=0.05 safety margin.",
+        rosettaLog: "[00:02] 128.5 KB adapter broadcast received over radio beacon. Shard migrated in 45ms."
+      },
+      {
+        time: "T+05s",
+        phase: "Phase 3: Clinical Query Retrieval",
+        naiveAlert: "SILENT COLLAPSE: Returned adult hypertension dosing with deceptive 0.81 confidence!",
+        naiveBadge: "LETHAL DOSE RISK",
+        naiveTemp: "PATIENT: SEVERE",
+        naiveBw: "2.1 GB",
+        naiveOverlap: "2.1%",
+        naiveBatt: "90%",
+        naiveDocTitle: "Doc #14: Adult ACE-Inhibitor Titration (WRONG)",
+        naiveDocScore: "Score: 0.812 (FAKE)",
+        naiveDocSnippet: "Administer 40mg lisinopril bolus intravenously... (LETHAL FOR PEDIATRIC VIRAL PATIENT).",
+        naiveAction: "Tablet UI shows 'High Confidence Match' for adult hypertension protocol!",
+        naiveLog: "[00:05] Query matched unrelated adult drug doc with 0.812 cosine score.",
+        
+        rosettaAlert: "SPACE GUARD TRANSLATION: Accurately matched pediatric antiviral contraindication.",
+        rosettaBadge: "VERIFIED PROTOCOL",
+        rosettaTemp: "PATIENT: TREATED",
+        rosettaBw: "128.5 KB",
+        rosettaOverlap: "93.1%",
+        rosettaBatt: "96%",
+        rosettaDocTitle: "Doc #03: Pediatric Antiviral Safety Protocol",
+        rosettaDocScore: "Cert: 95% Overlap",
+        rosettaDocSnippet: "Strict contraindication: ACE inhibitors cause renal collapse. Administer 5mg ribavirin with hydration.",
+        rosettaAction: "Conformal certificate P(Overlap ≥ 90%) ≥ 95%. Certified for pediatric triage.",
+        rosettaLog: "[00:05] Retrieved correct pediatric protocol with 93.1% certified overlap."
+      },
+      {
+        time: "T+08s",
+        phase: "Phase 4: Medical Administration",
+        naiveAlert: "Doctor prepares wrong medication based on hallucinated database result!",
+        naiveBadge: "MEDICAL ERROR",
+        naiveTemp: "PATIENT: ANAPHYLAXIS",
+        naiveBw: "2.1 GB",
+        naiveOverlap: "2.1%",
+        naiveBatt: "86%",
+        naiveDocTitle: "Wrong Medication Prepared",
+        naiveDocScore: "Confidence: FALSE",
+        naiveDocSnippet: "Adult medication injected. Patient heart rate drops precipitously.",
+        naiveAction: "Severe clinical emergency caused by silent vector database mismatch.",
+        naiveLog: "[00:08] Erroneous protocol administered. Patient vitals collapsed.",
+        
+        rosettaAlert: "Correct pediatric antiviral administered with saline hydration.",
+        rosettaBadge: "VITALS RECOVERING",
+        rosettaTemp: "PATIENT: RECOVERING",
+        rosettaBw: "128.5 KB",
+        rosettaOverlap: "93.1%",
+        rosettaBatt: "95%",
+        rosettaDocTitle: "Correct Dosage Given",
+        rosettaDocScore: "Cert: 95% Overlap",
+        rosettaDocSnippet: "Viral replication inhibited. Patient fever declines, platelet counts stabilize.",
+        rosettaAction: "Treatment successful according to CDC Delta guidelines.",
+        rosettaLog: "[00:08] Ribavirin administered. Patient vital signs stabilized."
+      },
+      {
+        time: "T+11s",
+        phase: "Phase 5: Clinical Outcome",
+        naiveAlert: "💥 CLINICAL DISASTER: Patient in cardiac ICU. Malpractice lawsuit pending.",
+        naiveBadge: "💀 TRAGIC LOSS",
+        naiveTemp: "PATIENT: ICU",
+        naiveBw: "2.1 GB",
+        naiveOverlap: "2.1%",
+        naiveBatt: "80%",
+        naiveDocTitle: "MALPRACTICE REPORT",
+        naiveDocScore: "Result: FAILED",
+        naiveDocSnippet: "Independent audit reveals vector database returned 200 OK across mismatched model axes.",
+        naiveAction: "Standard vector databases have no statistical guarantee or space safety.",
+        naiveLog: "[00:11] Patient evacuated to ICU. Cause: Silent retrieval failure.",
+        
+        rosettaAlert: "🏆 PATIENT SAVED: Child makes full recovery and discharged from quarantine.",
+        rosettaBadge: "✅ SAVED",
+        rosettaTemp: "PATIENT: NORMAL",
+        rosettaBw: "128.5 KB",
+        rosettaOverlap: "93.1%",
+        rosettaBatt: "94%",
+        rosettaDocTitle: "DISCHARGE REPORT",
+        rosettaDocScore: "Status: RECOVERED",
+        rosettaDocSnippet: "Conformal certificates ensured clinical safety in an off-grid environment.",
+        rosettaAction: "Rosetta Shard delivered mathematically certified recall without internet.",
+        rosettaLog: "[00:11] Patient discharged with clean blood panels. Outbreak contained."
+      }
+    ]
+  },
+  subsea: {
+    title: "🌊 SUBSEA MINING ROVER: DEEP OCEAN FAULT HAZARD",
+    desc: "Autonomous submersible operating at 3,000m depth with acoustic acoustic modem (200 bps). Surface ship upgrades bathymetry model. Rover detects methane vent pressure surge.",
+    query: "Subsea geothermal vent pressure surge emergency ballast purge",
+    steps: [
+      {
+        time: "T+00s",
+        phase: "Phase 1: Surface Ship Model Upgrade",
+        naiveAlert: "Surface support ship deployed 1024-d acoustic bathymetry model.",
+        naiveBadge: "DESYNCED",
+        naiveTemp: "DEPTH: 3,100m",
+        naiveBw: "0 KB",
+        naiveOverlap: "--",
+        naiveBatt: "85%",
+        naiveDocTitle: "Awaiting Query...",
+        naiveDocScore: "--",
+        naiveDocSnippet: "Methane gas plume detected rising from tectonic fissure. Rover sonar triggered.",
+        naiveAction: "Rover autonomy requests emergency maneuvering guidance.",
+        naiveLog: "[00:00] Surface mothership updated sonar model to v2 1024-d.",
+        
+        rosettaAlert: "PROTECTED: Space Guard tagged surface upgrade. Edge shard isolated.",
+        rosettaBadge: "GUARD ACTIVE",
+        rosettaTemp: "DEPTH: 3,100m",
+        rosettaBw: "0 KB",
+        rosettaOverlap: "--",
+        rosettaBatt: "85%",
+        rosettaDocTitle: "Awaiting Query...",
+        rosettaDocScore: "--",
+        rosettaDocSnippet: "Space Guard protects 384-d acoustic vector shard from corrupted queries.",
+        rosettaAction: "Awaiting acoustic adapter bundle transmission.",
+        rosettaLog: "[00:00] Space Guard tags surface space: sonar-v2/1024/l2."
+      },
+      {
+        time: "T+02s",
+        phase: "Phase 2: Acoustic Bandwidth Trap",
+        naiveAlert: "Acoustic modem (200 bps) would take 62 DAYS to download 1.2 GB model! Impossible.",
+        naiveBadge: "MODEM TIMEOUT",
+        naiveTemp: "DEPTH: 3,120m (SINKING)",
+        naiveBw: "1.2 GB (TIMEOUT)",
+        naiveOverlap: "2.8%",
+        naiveBatt: "82%",
+        naiveDocTitle: "Out-of-Date Shard",
+        naiveDocScore: "--",
+        naiveDocSnippet: "Acoustic link unable to transfer neural model. Rover queries unaligned local store.",
+        naiveAction: "Executing raw cross-space search through seawater column.",
+        naiveLog: "[00:02] Acoustic throughput 200 bps. Large model sync impossible.",
+        
+        rosettaAlert: "Compressed 128 KB Ridge bundle transmitted via acoustic pulses in 8 seconds!",
+        rosettaBadge: "ACOUSTIC SYNC",
+        rosettaTemp: "DEPTH: 3,100m (HELD)",
+        rosettaBw: "128.5 KB",
+        rosettaOverlap: "89% Certified",
+        rosettaBatt: "84%",
+        rosettaDocTitle: "Acoustic Bundle Loaded",
+        rosettaDocScore: "Size: 128.5 KB",
+        rosettaDocSnippet: "128 KB matrix weights delivered through acoustic hydrophone array.",
+        rosettaAction: "Atomic batch migration completed on underwater embedded ARM64 computer.",
+        rosettaLog: "[00:02] 128.5 KB bundle received via acoustic hydrophone. Shard migrated."
+      },
+      {
+        time: "T+05s",
+        phase: "Phase 3: Emergency Sonar Retrieval",
+        naiveAlert: "SILENT COLLAPSE: Returned robotic arm lubrication procedure with fake 0.83 score!",
+        naiveBadge: "HALLUCINATION",
+        naiveTemp: "PRESSURE: 320 BAR",
+        naiveBw: "1.2 GB",
+        naiveOverlap: "2.8%",
+        naiveBatt: "78%",
+        naiveDocTitle: "Doc #19: Manipulator Arm Grease Spec (IRRELEVANT)",
+        naiveDocScore: "Score: 0.831 (FAKE)",
+        naiveDocSnippet: "Apply molybdenum disulfide paste to titanium joint seals every 100 operating hours...",
+        naiveAction: "Autopilot powers on arm grease heaters instead of blowing buoyancy tanks!",
+        naiveLog: "[00:05] Query matched manipulator arm doc with 0.831 cosine score.",
+        
+        rosettaAlert: "CERTIFIED MATCH: Accurately retrieved rapid buoyancy ballast blow sequence.",
+        rosettaBadge: "BALLAST READY",
+        rosettaTemp: "PRESSURE: 310 BAR",
+        rosettaBw: "128.5 KB",
+        rosettaOverlap: "91.8%",
+        rosettaBatt: "83%",
+        rosettaDocTitle: "Doc #04: Rapid Ballast Purge Under Methane Plume",
+        rosettaDocScore: "Cert: 93% Overlap",
+        rosettaDocSnippet: "Ignite compressed nitrogen squib to purge port and starboard ballast tanks within 400ms.",
+        rosettaAction: "Conformal recall certificate validates nitrogen squib ignition protocol.",
+        rosettaLog: "[00:05] Retrieved ballast purge protocol with 91.8% certified overlap."
+      },
+      {
+        time: "T+08s",
+        phase: "Phase 4: Autonomous Evasion",
+        naiveAlert: "Methane gas pocket envelops rover. Loss of water density causes plummet!",
+        naiveBadge: "PLUMMETING",
+        naiveTemp: "DEPTH: 3,450m (CRUSH DEPTH)",
+        naiveBw: "1.2 GB",
+        naiveOverlap: "2.8%",
+        naiveBatt: "65%",
+        naiveDocTitle: "Wrong Procedure Active",
+        naiveDocScore: "Loss: CRITICAL",
+        naiveDocSnippet: "Rover descending into abyssal trench at 4.2 m/s. Titanium hull creaking.",
+        naiveAction: "Autopilot powerless to stop descent as wrong system was engaged.",
+        naiveLog: "[00:08] Depth 3,450m. Hull stress alarms triggered. Descent accelerating.",
+        
+        rosettaAlert: "Nitrogen squibs ignited. 2 tons of water ejected. Rover ascends above plume!",
+        rosettaBadge: "ASCENDING",
+        rosettaTemp: "DEPTH: 2,800m (SAFE)",
+        rosettaBw: "128.5 KB",
+        rosettaOverlap: "91.8%",
+        rosettaBatt: "81%",
+        rosettaDocTitle: "Ballast Blown",
+        rosettaDocScore: "Cert: 93% Overlap",
+        rosettaDocSnippet: "Rover achieves positive buoyancy (+800 kg), clearing the toxic gas vent safely.",
+        rosettaAction: "Thrusters maintain station 300m above sea floor.",
+        rosettaLog: "[00:08] Nitrogen squibs fired. Ballast blown in 380ms. Rapid ascent."
+      },
+      {
+        time: "T+11s",
+        phase: "Phase 5: Subsea Outcome",
+        naiveAlert: "💥 ROVER CRUSHED: Rover imploded past 3,600m crush depth. $4.5M vehicle lost.",
+        naiveBadge: "💀 IMPLODED",
+        naiveTemp: "DEPTH: 3,650m (IMPLODED)",
+        naiveBw: "1.2 GB",
+        naiveOverlap: "2.8%",
+        naiveBatt: "0%",
+        naiveDocTitle: "HULL IMPLOSION",
+        naiveDocScore: "Status: CRUSHED",
+        naiveDocSnippet: "Titanium pressure vessel ruptured. Debris scattered across ocean floor.",
+        naiveAction: "Catastrophic loss caused by silent failure in vector search.",
+        naiveLog: "[00:11] Acoustic beacon silent. Hydrophones detect implosion event.",
+        
+        rosettaAlert: "🏆 ROVER SAFE: Submersible docked with mother ship. Rare earth core samples intact!",
+        rosettaBadge: "✅ DOCKED",
+        rosettaTemp: "DEPTH: SURFACE",
+        rosettaBw: "128.5 KB",
+        rosettaOverlap: "91.8%",
+        rosettaBatt: "76% (SAFE)",
+        rosettaDocTitle: "MISSION COMPLETE",
+        rosettaDocScore: "Status: RECOVERED",
+        rosettaDocSnippet: "Autonomous mission succeeded. All scientific payloads recovered safely.",
+        rosettaAction: "Rosetta Shard 128 KB acoustic adapter saved $4.5M research vehicle.",
+        rosettaLog: "[00:11] Rover winched onto support ship deck. Core samples secured."
+      }
+    ]
+  }
+};
+
+// --- SIMULATION STATE ---
+let currentScenario = 'drone';
+let currentStep = 0;
+let isPlaying = false;
+let playTimer = null;
+let playSpeed = 1.0;
+const BASE_STEP_DURATION = 4200; // 4.2s per phase
+
+function switchScenario(scenarioKey) {
+  currentScenario = scenarioKey;
+  document.querySelectorAll('.scenario-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  
+  const sc = SCENARIOS[scenarioKey];
+  document.getElementById('scenario-title').innerHTML = sc.title;
+  document.getElementById('scenario-desc').innerHTML = sc.desc;
+  
+  resetSimulation();
+}
+
+function renderStep(stepIndex) {
+  currentStep = stepIndex;
+  const sc = SCENARIOS[currentScenario];
+  const step = sc.steps[stepIndex];
+
+  // Update Timeline Steps UI
+  for (let i = 0; i < 5; i++) {
+    const el = document.getElementById('step-' + i);
+    if (i < stepIndex) {
+      el.className = 'timeline-step completed';
+    } else if (i === stepIndex) {
+      el.className = 'timeline-step active';
+    } else {
+      el.className = 'timeline-step';
+    }
+  }
+
+  // --- UPDATE LEFT: NAIVE UNIVERSE ---
+  document.getElementById('naive-alert').innerText = step.naiveAlert;
+  document.getElementById('naive-badge').innerText = step.naiveBadge;
+  document.getElementById('naive-temp').innerText = step.naiveTemp;
+  document.getElementById('naive-metric-bw').innerText = step.naiveBw;
+  document.getElementById('naive-metric-overlap').innerText = step.naiveOverlap;
+  document.getElementById('naive-metric-batt').innerText = step.naiveBatt;
+  document.getElementById('naive-doc-title').innerText = step.naiveDocTitle;
+  document.getElementById('naive-doc-score').innerText = step.naiveDocScore;
+  document.getElementById('naive-doc-snippet').innerText = step.naiveDocSnippet;
+  document.getElementById('naive-action').innerHTML = '<b>Autopilot Reaction:</b> ' + step.naiveAction;
+
+  // Append Naive Log
+  const naiveLogs = document.getElementById('naive-logs');
+  const naiveEntry = document.createElement('div');
+  naiveEntry.className = 'log-entry';
+  naiveEntry.innerHTML = `<span class="log-ts">[${step.time}]</span> <span class="${stepIndex >= 2 ? 'log-warn' : ''}">${step.naiveLog}</span>`;
+  naiveLogs.appendChild(naiveEntry);
+  naiveLogs.scrollTop = naiveLogs.scrollHeight;
+
+  // Naive Drone Visual State
+  const naiveDrone = document.getElementById('naive-drone-svg');
+  const naiveFire = document.getElementById('naive-fire');
+  if (stepIndex === 0) {
+    naiveDrone.className = 'drone-svg';
+    naiveFire.style.display = 'none';
+  } else if (stepIndex === 1 || stepIndex === 2) {
+    naiveDrone.className = 'drone-svg drone-shaking';
+    naiveFire.style.display = 'none';
+  } else if (stepIndex === 3) {
+    naiveDrone.className = 'drone-svg drone-shaking';
+    naiveFire.style.display = 'block';
+  } else if (stepIndex === 4) {
+    naiveDrone.className = 'drone-svg drone-crashing';
+    naiveFire.style.display = 'block';
+  }
+
+  // --- UPDATE RIGHT: ROSETTA UNIVERSE ---
+  document.getElementById('rosetta-alert').innerText = step.rosettaAlert;
+  document.getElementById('rosetta-badge').innerText = step.rosettaBadge;
+  document.getElementById('rosetta-temp').innerText = step.rosettaTemp;
+  document.getElementById('rosetta-metric-bw').innerText = step.rosettaBw;
+  document.getElementById('rosetta-metric-overlap').innerText = step.rosettaOverlap;
+  document.getElementById('rosetta-metric-batt').innerText = step.rosettaBatt;
+  document.getElementById('rosetta-doc-title').innerText = step.rosettaDocTitle;
+  document.getElementById('rosetta-doc-score').innerText = step.rosettaDocScore;
+  document.getElementById('rosetta-doc-snippet').innerText = step.rosettaDocSnippet;
+  document.getElementById('rosetta-action').innerHTML = '<b>Autopilot Reaction:</b> ' + step.rosettaAction;
+
+  // Append Rosetta Log
+  const rosettaLogs = document.getElementById('rosetta-logs');
+  const rosettaEntry = document.createElement('div');
+  rosettaEntry.className = 'log-entry';
+  rosettaEntry.innerHTML = `<span class="log-ts">[${step.time}]</span> <span class="${stepIndex >= 1 ? 'log-ok' : ''}">${step.rosettaLog}</span>`;
+  rosettaLogs.appendChild(rosettaEntry);
+  rosettaLogs.scrollTop = rosettaLogs.scrollHeight;
+
+  // Rosetta Drone Visual State
+  const rosettaCargo = document.getElementById('rosetta-cargo');
+  if (stepIndex === 4) {
+    rosettaCargo.style.display = 'block';
+  } else {
+    rosettaCargo.style.display = 'none';
+  }
+}
+
+function nextStep() {
+  if (currentStep < 4) {
+    renderStep(currentStep + 1);
+  } else {
+    stopPlay();
+  }
+}
+
+function prevStep() {
+  if (currentStep > 0) {
+    renderStep(currentStep - 1);
+  }
+}
+
+function goToStep(index) {
+  renderStep(index);
+}
+
+function resetSimulation() {
+  stopPlay();
+  document.getElementById('naive-logs').innerHTML = '';
+  document.getElementById('rosetta-logs').innerHTML = '';
+  renderStep(0);
+}
+
+function togglePlay() {
+  if (isPlaying) {
+    stopPlay();
+  } else {
+    startPlay();
+  }
+}
+
+function startPlay() {
+  if (currentStep === 4) {
+    resetSimulation();
+  }
+  isPlaying = true;
+  document.getElementById('play-icon').innerText = '⏸';
+  document.getElementById('play-text').innerText = 'PAUSE SIMULATION';
+  document.getElementById('btn-play').classList.add('playing');
+
+  const interval = BASE_STEP_DURATION / playSpeed;
+  playTimer = setInterval(() => {
+    if (currentStep < 4) {
+      nextStep();
+    } else {
+      stopPlay();
+    }
+  }, interval);
+}
+
+function stopPlay() {
+  isPlaying = false;
+  if (playTimer) {
+    clearInterval(playTimer);
+    playTimer = null;
+  }
+  document.getElementById('play-icon').innerText = '▶';
+  document.getElementById('play-text').innerText = 'START MISSION SIMULATION';
+  document.getElementById('btn-play').classList.remove('playing');
+}
+
+function setSpeed(speed, btn) {
+  playSpeed = speed;
+  document.querySelectorAll('.btn-speed').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (isPlaying) {
+    stopPlay();
+    startPlay();
+  }
+}
+
+// --- THEME SYNC ---
+function initTheme() {
+  const savedTheme = localStorage.getItem('rosetta_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  updateThemeBtn(savedTheme);
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  const target = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', target);
+  localStorage.setItem('rosetta_theme', target);
+  updateThemeBtn(target);
+}
+
+function updateThemeBtn(theme) {
+  const btnText = document.getElementById('theme-btn-text');
+  if (theme === 'light') {
+    btnText.innerText = '🌙 Dark Theme';
+  } else {
+    btnText.innerText = '☀️ White Theme';
+  }
+}
+
+// Initialize on page load
+window.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  renderStep(0);
+});
+</script>
+</body>
+</html>

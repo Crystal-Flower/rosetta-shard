@@ -5,7 +5,7 @@ from pathlib import Path
 
 import numpy as np
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -366,6 +366,12 @@ def reset_demo():
     state.cleanup()
     state = DemoState()
     return {"status": "reset_complete"}
+
+
+@app.get("/simulation")
+@app.get("/simulator")
+def serve_simulation():
+    return FileResponse(STATIC_DIR / "simulation.html")
 
 
 app.mount("/", StaticFiles(directory=str(STATIC_DIR), html=True), name="static")

@@ -791,6 +791,7 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
       <button class="tab-btn active" onclick="switchTab('cockpit')">🎮 Live Console</button>
       <button class="tab-btn" onclick="switchTab('benchmarks')">📊 Benchmark Proof (E1–E9)</button>
       <button class="tab-btn" onclick="switchTab('defense')">🛡️ Judge Defense</button>
+      <a href="/simulation.html" class="tab-btn" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(236,72,153,0.5);color:#ec4899;background:rgba(236,72,153,0.08);font-weight:700;" title="Real-World Animated Mission Simulation">🚁 Mission Simulator ➔</a>
     </div>
 
     <!-- LIVE TELEMETRY PILL & THEME TOGGLE -->
@@ -817,7 +818,10 @@ main { flex: 1; max-width: 1380px; width: 100%; margin: 0 auto; padding: 24px; d
           <div class="scenario-detail">Operating in radio-denied mountain sector. Storing mission-critical battery thermal limits & visual SLAM guides on local <b>Qdrant Edge</b>.</div>
         </div>
       </div>
-      <div class="scenario-badge" id="hud-connection">CONNECTED · CLOUD SYNC READY</div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <a href="/simulation.html" style="text-decoration:none;font-size:11px;font-weight:800;font-family:var(--font-mono);padding:6px 12px;border-radius:8px;background:linear-gradient(135deg,#ec4899,#8b5cf6);color:#fff;box-shadow:0 0 14px rgba(236,72,153,0.4);display:inline-flex;align-items:center;gap:6px;" title="View Live Animated Real-World Mission Simulation">⚡ Animated Mission Simulation ➔</a>
+        <div class="scenario-badge" id="hud-connection">CONNECTED · CLOUD SYNC READY</div>
+      </div>
     </div>
 
     <!-- 60-SECOND CRISIS WALKTHROUGH PIPELINE -->
