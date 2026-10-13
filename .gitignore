@@ -14,3 +14,4 @@ htmlcov/
 data/
 *.tmp
 *.bak
+demo_output/raw_recordings/
